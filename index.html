@@ -670,7 +670,7 @@ function drawGraph(){
   Object.keys(dueMap).map(Number).forEach(d=>{
     const x=dx(d).toFixed(1),y=dy(obligByDay[d]).toFixed(1);
     const away=d-dom;
-    const col=away<0?'#94A3B8':away<=3?'#DC2626':away<=10?'#D97706':'#15803D';
+    const col=away<0?'#94A3B8':away<=3?'#D97706':away<=10?'#D97706':'#15803D';
     g+=`<circle cx="${x}" cy="${y}" r="4" fill="${col}" stroke="white" stroke-width="1.5"/>`;
     const lY=(+y-9).toFixed(1),anch=d>=mdays*0.85?'end':d<=2?'start':'middle';
     g+=`<text x="${x}" y="${lY}" text-anchor="${anch}" fill="${col}" font-size="10" font-weight="700" font-family="Inter,sans-serif">${fmt(dueMap[d])}</text>`;
@@ -687,11 +687,11 @@ function drawGraph(){
   const midY=((+iy+(+oy))/2).toFixed(1);
   const bx=(+tx+6).toFixed(1);
   if(Math.abs(+iy-(+oy))>14){
-    g+=`<line x1="${bx}" y1="${iy}" x2="${bx}" y2="${oy}" stroke="${surplus>=0?'#15803D':'#DC2626'}" stroke-width="1.5" opacity="0.6"/>`;
-    g+=`<line x1="${tx}" y1="${iy}" x2="${bx}" y2="${iy}" stroke="${surplus>=0?'#15803D':'#DC2626'}" stroke-width="1" opacity="0.4"/>`;
-    g+=`<line x1="${tx}" y1="${oy}" x2="${bx}" y2="${oy}" stroke="${surplus>=0?'#15803D':'#DC2626'}" stroke-width="1" opacity="0.4"/>`;
+    g+=`<line x1="${bx}" y1="${iy}" x2="${bx}" y2="${oy}" stroke="${surplus>=0?'#15803D':'#94A3B8'}" stroke-width="1.5" opacity="0.6"/>`;
+    g+=`<line x1="${tx}" y1="${iy}" x2="${bx}" y2="${iy}" stroke="${surplus>=0?'#15803D':'#94A3B8'}" stroke-width="1" opacity="0.4"/>`;
+    g+=`<line x1="${tx}" y1="${oy}" x2="${bx}" y2="${oy}" stroke="${surplus>=0?'#15803D':'#94A3B8'}" stroke-width="1" opacity="0.4"/>`;
     const labX=(+bx+4).toFixed(1);
-    g+=`<text x="${labX}" y="${(+midY+4).toFixed(1)}" fill="${surplus>=0?'#15803D':'#DC2626'}" font-size="11" font-weight="700" font-family="Inter,sans-serif">${fmtSigned(surplus)}</text>`;
+    g+=`<text x="${labX}" y="${(+midY+4).toFixed(1)}" fill="${surplus>=0?'#15803D':'#94A3B8'}" font-size="11" font-weight="700" font-family="Inter,sans-serif">${fmtSigned(surplus)}</text>`;
   }
   g+=`<text x="${tx}" y="${(tm+13).toFixed(1)}" text-anchor="middle" fill="#D97706" font-size="10" font-weight="600" font-family="Inter,sans-serif">Today</text>`;
 
@@ -908,7 +908,7 @@ function drawGraph2(){
     const labelY=dy2(curBal);
     const isDeficit=curBal<0;
     const labelText=isDeficit?`Shortfall ${fmt(Math.abs(curBal))}`:`Bal. ${fmt(curBal)}`;
-    const labelCol=isDeficit?'#DC2626':'#D97706';
+    const labelCol=isDeficit?'#94A3B8':'#D97706';
     g+=`<text x="${(W-rm-2).toFixed(1)}" y="${(labelY-4).toFixed(1)}" text-anchor="end" fill="${labelCol}" font-size="14" font-weight="600" font-family="Inter,sans-serif">${labelText}</text>`;
   }
 
@@ -918,24 +918,21 @@ function drawGraph2(){
     const x=bx2(D).toFixed(1);
     const bY=dy2(v).toFixed(1);
     const bH=Math.max(1,dy2(0)-(+bY)).toFixed(1);
-    const aboveSurplus=surplus>0&&v>surplus;
-    const col=aboveSurplus?'#DC2626':'var(--b2)';
+    const col='var(--b2)';
     const pk=dueDots[D]||0;
     if(pk>0&&pk<v){
-      /* solid bottom (due today) + transparent top (still accumulating) */
       const pkY=dy2(pk).toFixed(1);
       const pkH=Math.max(1,dy2(0)-(+pkY)).toFixed(1);
-      g+=`<rect x="${x}" y="${pkY}" width="${barW.toFixed(1)}" height="${pkH}" rx="1" fill="${col}" opacity="0.85"/>`;
+      g+=`<rect x="${x}" y="${pkY}" width="${barW.toFixed(1)}" height="${pkH}" rx="1" fill="${col}" opacity="1"/>`;
       const topH=Math.max(1,(+pkY)-(+bY)).toFixed(1);
-      g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${topH}" rx="1" fill="${col}" opacity="0.3"/>`;
+      g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${topH}" rx="1" fill="${col}" opacity="0.5"/>`;
     } else {
-      /* uniform bar (all due, or all accumulating) */
-      const opacity=pk>0?'0.85':'0.5';
+      const opacity=pk>0?'1':'0.5';
       g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${bH}" rx="1" fill="${col}" opacity="${opacity}"/>`;
     }
 
     if(dueDots[D]){
-      const col2=D<=3?'#DC2626':D<=10?'#D97706':'#2563EB';
+      const col2=D<=3?'#D97706':D<=10?'#D97706':'#2563EB';
       g+=`<circle cx="${(+x+barW/2).toFixed(1)}" cy="${(+bY-6).toFixed(1)}" r="3.5" fill="${col2}" stroke="white" stroke-width="1.5"/>`;
       if(+bY>tm+16){
         const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
