@@ -608,7 +608,7 @@ function drawGraph(){
     });
     const todX=dx(dom).toFixed(1);
     aPath+=` L ${todX},${dy(prev).toFixed(1)} L ${todX},${dy(0).toFixed(1)} Z`;
-    g+=`<path d="${aPath}" fill="#D97706" opacity="0.08"/>`;
+    /* area fill removed to avoid tinting bars */
   }
 
   /* past obligations fill (blue, up to today) */
@@ -634,10 +634,10 @@ function drawGraph(){
       prev=s.cum;
     });
     iPath+=` L ${dx(dom).toFixed(1)},${dy(prev).toFixed(1)}`;
-    g+=`<path d="${iPath}" fill="none" stroke="#D97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    g+=`<path d="${iPath}" fill="none" stroke="#B45309" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
     /* dot at end of income line */
     const lastInc=incSteps[incSteps.length-1];
-    g+=`<circle cx="${dx(lastInc.day).toFixed(1)}" cy="${dy(lastInc.cum).toFixed(1)}" r="4" fill="#D97706"/>`;
+    g+=`<circle cx="${dx(lastInc.day).toFixed(1)}" cy="${dy(lastInc.cum).toFixed(1)}" r="4" fill="#B45309"/>`;
   }
 
   /* obligations line: past (solid blue) + future (dashed lighter) */
@@ -903,7 +903,7 @@ function drawGraph2(){
     fillPath+=` H ${(W-rm).toFixed(1)} L ${(W-rm).toFixed(1)} ${zy} Z`;
     g+=`<line x1="${lm}" y1="${zy}" x2="${W-rm}" y2="${zy}" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>`;
     g+=`<text x="${lm-5}" y="${(+zy+5).toFixed(1)}" text-anchor="end" fill="#94A3B8" font-size="14" font-family="Inter,sans-serif">$0</text>`;
-    g+=`<path d="${fillPath}" fill="#D97706" opacity="0.1"/>`;
+    /* area fill removed */
     g+=`<path d="${stepPath}" fill="none" stroke="#D97706" stroke-width="2" opacity="0.8"/>`;
     const labelY=dy2(curBal);
     const isDeficit=curBal<0;
@@ -923,11 +923,11 @@ function drawGraph2(){
     if(pk>0&&pk<v){
       const pkY=dy2(pk).toFixed(1);
       const pkH=Math.max(1,dy2(0)-(+pkY)).toFixed(1);
-      g+=`<rect x="${x}" y="${pkY}" width="${barW.toFixed(1)}" height="${pkH}" rx="1" fill="${col}" opacity="1"/>`;
+      g+=`<rect x="${x}" y="${pkY}" width="${barW.toFixed(1)}" height="${pkH}" rx="1" fill="${col}" opacity="0.65"/>`;
       const topH=Math.max(1,(+pkY)-(+bY)).toFixed(1);
-      g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${topH}" rx="1" fill="${col}" opacity="0.5"/>`;
+      g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${topH}" rx="1" fill="${col}" opacity="0.25"/>`;
     } else {
-      const opacity=pk>0?'1':'0.5';
+      const opacity=pk>0?'0.65':'0.25';
       g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${bH}" rx="1" fill="${col}" opacity="${opacity}"/>`;
     }
 
