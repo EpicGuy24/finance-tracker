@@ -164,6 +164,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .graph-bal{font-size:16px;font-weight:700;}
 .graph-bal.pos{color:#15803D;} .graph-bal.neg{color:#DC2626;}
 .graph-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;}
+.print-graph-title{display:none;}
+@media print{.print-graph-title{display:block;font-size:16px;font-weight:700;margin-bottom:14px;border-bottom:1px solid #ccc;padding-bottom:6px;}}
 .leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
 .leg-line{width:18px;height:2.5px;border-radius:1px;}
 .leg-dash{width:18px;height:0;border-top:2px dashed;}
@@ -353,6 +355,7 @@ span.flatpickr-weekday{font-size:10px;font-weight:600;color:var(--muted);text-al
 <div style="height:16px"></div>
 
 <!-- ══ OBLIGATION OUTLOOK ══ -->
+<div class="print-graph-title" id="print-graph-title">Finance Tracker — <span id="print-graph-month"></span></div>
 <div class="graph-wrap">
   <div class="graph-hd">
     <div>
@@ -369,8 +372,9 @@ span.flatpickr-weekday{font-size:10px;font-weight:600;color:var(--muted);text-al
   </div>
   <svg id="urgency-chart" viewBox="0 0 836 480" width="100%" preserveAspectRatio="xMinYMin meet" role="img" aria-label="30-day obligation chart"></svg>
   <div class="graph-legend">
-    <div class="leg"><div class="leg-line" style="background:var(--b2)"></div>Obligation accumulation</div>
-    <div class="leg"><div class="leg-line" style="background:#D97706;opacity:.5"></div>Current surplus</div>
+    <div class="leg"><div style="width:18px;height:10px;background:var(--b2);opacity:0.45;border-radius:2px"></div>Amount due on that day</div>
+    <div class="leg"><div style="width:18px;height:10px;background:var(--b2);opacity:0.15;border-radius:2px"></div>Accumulating (not yet due)</div>
+    <div class="leg"><div class="leg-line" style="background:#B45309"></div>Income received</div>
     <div class="leg"><div style="width:8px;height:8px;border-radius:50%;background:var(--b2);flex-shrink:0"></div>Payment due date</div>
   </div>
 </div>
@@ -578,6 +582,7 @@ function drawGraph(){
   const hd=document.getElementById('hd-date');if(hd)hd.textContent=MN[mo]+' '+dom+', '+yr;
   const him=document.getElementById('hd-inc-month');if(him)him.textContent=MN[mo];
   const icm=document.getElementById('icol-month');if(icm)icm.textContent=MN[mo]+" '"+String(yr).slice(2);
+  const pgm=document.getElementById('print-graph-month');if(pgm)pgm.textContent=MN[mo]+' '+yr;
 
   /* SVG coords */
   const W=760,H=300,lm=56,rm=12,tm=28,bm=38;
