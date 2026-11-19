@@ -1085,8 +1085,7 @@ function updateIncomeStats(){
   const incLogged=getMonthlyIncomeTotal();
   const dueMap=getDueMap(yr,mo);
   let totalOblig=0;
-  const dueMap2=getDueMap(yr,mo);
-  for(const d in dueMap2)totalOblig+=dueMap2[d];
+  document.querySelectorAll('.iamt[data-b]').forEach(el=>{totalOblig+=parseAmt(el.textContent);});
   const surplus=incLogged-totalOblig;
   const hInc=document.getElementById('hd-inc');if(hInc)hInc.textContent=fmt(incLogged);
   const him=document.getElementById('hd-inc-month');if(him)him.textContent=MN[mo];
