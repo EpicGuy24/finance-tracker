@@ -622,7 +622,7 @@ function drawGraph(){
       }
     }
     oPath+=` L ${dx(dom).toFixed(1)},${dy(prev).toFixed(1)} L ${dx(dom).toFixed(1)},${dy(0).toFixed(1)} Z`;
-    g+=`<path d="${oPath}" fill="#2563EB" opacity="0.09"/>`;
+    /* blue area fill removed */
   }
 
   /* income stepped line (amber, solid up to today) */
@@ -923,11 +923,11 @@ function drawGraph2(){
     if(pk>0&&pk<v){
       const pkY=dy2(pk).toFixed(1);
       const pkH=Math.max(1,dy2(0)-(+pkY)).toFixed(1);
-      g+=`<rect x="${x}" y="${pkY}" width="${barW.toFixed(1)}" height="${pkH}" rx="1" fill="${col}" opacity="0.65"/>`;
+      g+=`<rect x="${x}" y="${pkY}" width="${barW.toFixed(1)}" height="${pkH}" rx="1" fill="${col}" opacity="0.45"/>`;
       const topH=Math.max(1,(+pkY)-(+bY)).toFixed(1);
-      g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${topH}" rx="1" fill="${col}" opacity="0.25"/>`;
+      g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${topH}" rx="1" fill="${col}" opacity="0.15"/>`;
     } else {
-      const opacity=pk>0?'0.65':'0.25';
+      const opacity=pk>0?'0.45':'0.15';
       g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${bH}" rx="1" fill="${col}" opacity="${opacity}"/>`;
     }
 
