@@ -176,6 +176,10 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 }
 
 /* ── Recurring button ── */
+.drag-handle{flex-shrink:0;width:12px;cursor:grab;opacity:0;font-size:12px;color:var(--muted);user-select:none;transition:opacity .15s;line-height:1;padding:0;}
+.irow:hover .drag-handle{opacity:0.5;}
+.irow.dragging{opacity:0.3;}
+.irow.drag-over{border-top:2px solid var(--b2);}
 .irec{flex-shrink:0;width:36px;overflow:hidden;background:none;border:none;cursor:pointer;font-size:10px;color:var(--muted);padding:1px 4px;border-radius:4px;opacity:0;transition:opacity .15s,color .15s,background .15s;line-height:1;}
 .irow:hover .irec{opacity:1;}
 .irec.irec-on{opacity:1;color:var(--b2);background:rgba(37,99,235,.12);}
@@ -1060,6 +1064,46 @@ function autoAdvanceDueDates(){
   });
 }
 
+let _dragSrc=null;
+function initDragHandles(){
+  [1,2,3].forEach(b=>{
+    const list=document.getElementById('il'+b);if(!list)return;
+    list.querySelectorAll('.irow').forEach(row=>{
+      row.setAttribute('draggable','true');
+      if(row.querySelector('.drag-handle'))return;
+      const h=document.createElement('span');h.className='drag-handle';h.textContent='⠿';
+      row.insertBefore(h,row.firstChild);
+    });
+    if(list._dragInited)return;list._dragInited=true;
+    list.addEventListener('dragstart',e=>{
+      const row=e.target.closest('.irow');if(!row)return;
+      _dragSrc=row;setTimeout(()=>row.classList.add('dragging'),0);
+      e.dataTransfer.effectAllowed='move';
+    });
+    list.addEventListener('dragover',e=>{
+      e.preventDefault();
+      const row=e.target.closest('.irow');if(!row||row===_dragSrc)return;
+      list.querySelectorAll('.irow').forEach(r=>r.classList.remove('drag-over'));
+      row.classList.add('drag-over');
+    });
+    list.addEventListener('dragleave',e=>{
+      if(!list.contains(e.relatedTarget))list.querySelectorAll('.irow').forEach(r=>r.classList.remove('drag-over'));
+    });
+    list.addEventListener('drop',e=>{
+      e.preventDefault();
+      const target=e.target.closest('.irow');
+      list.querySelectorAll('.irow').forEach(r=>r.classList.remove('drag-over'));
+      if(!target||target===_dragSrc||!_dragSrc)return;
+      list.insertBefore(_dragSrc,target);
+      _dragSrc.classList.remove('dragging');_dragSrc=null;
+      computeAll();
+    });
+    list.addEventListener('dragend',()=>{
+      list.querySelectorAll('.irow').forEach(r=>r.classList.remove('dragging','drag-over'));
+      _dragSrc=null;
+    });
+  });
+}
 function sortExpenseRows(){
   [1,2,3].forEach(b=>{
     const list=document.getElementById('il'+b);if(!list)return;
@@ -1144,7 +1188,7 @@ function computeAll(){
   drawGraph();
   drawGraph2();
   initAllDatePickers();
-  sortExpenseRows();
+  initDragHandles();
   initRecurringUI();
   const _il2=document.getElementById('il2');const _il2more=document.getElementById('il2-more');
   if(_il2&&_il2more){const _cnt=_il2.querySelectorAll('.irow').length;const _over=_cnt-30;_il2more.textContent=_over>0?'+ '+_over+' more item'+(+_over===1?'':'s')+' not shown in print':''}
@@ -1154,6 +1198,7 @@ function computeAll(){
   if(_il3&&_il3more){const _cnt3=_il3.querySelectorAll('.irow').length;const _over3=_cnt3-10;_il3more.textContent=_over3>0?'+ '+_over3+' more item'+(+_over3===1?'':'s')+' not shown in print':''}
   const _ilinc=document.getElementById('income-list');const _ilincmore=document.getElementById('income-more');
   if(_ilinc&&_ilincmore){const _cnti=_ilinc.querySelectorAll('.irow').length;const _overi=_cnti-10;_ilincmore.textContent=_overi>0?'+ '+_overi+' more item'+(+_overi===1?'':'s')+' not shown in print':''}
+  saveLS();
   setTimeout(updateRowBars,0);
 }
 
@@ -1253,7 +1298,7 @@ window.addEventListener('afterprint',function(){
 /* ── EXPORT / IMPORT ── */
 function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-function doExport(){
+function collectExportData(){
   const data={v:1,income:[],savings:[],expenses:[],goals:[]};
   document.querySelectorAll('#income-list .irow.inc-entry').forEach(r=>{
     data.income.push({
@@ -1276,6 +1321,11 @@ function doExport(){
   collectBucket('il1','savings');
   collectBucket('il2','expenses');
   collectBucket('il3','goals');
+  return data;
+}
+
+function doExport(){
+  const data=collectExportData();
   const json=JSON.stringify(data,null,2);
   navigator.clipboard.writeText(json).then(()=>{
     const btn=document.getElementById('btn-export');
@@ -1316,6 +1366,12 @@ function doImport(){
     err.textContent='Unrecognized format — paste data exported from this tracker.';
     err.style.display='block';return;
   }
+  applyData(data);
+  closeImport();
+  computeAll();
+}
+
+function applyData(data){
   ['income-list','il1','il2','il3'].forEach(id=>{
     const list=document.getElementById(id);
     if(list)list.querySelectorAll('.irow').forEach(r=>r.remove());
@@ -1355,10 +1411,22 @@ function doImport(){
   insertBucket('savings','il1',1);
   insertBucket('expenses','il2',2);
   insertBucket('goals','il3',3);
-  computeAll();
-  closeImport();
 }
 
+function saveLS(){
+  try{localStorage.setItem('ftv1',JSON.stringify(collectExportData()));}catch(e){}
+}
+function loadLS(){
+  try{
+    const raw=localStorage.getItem('ftv1');
+    if(!raw)return false;
+    const d=JSON.parse(raw);
+    if(!d||d.v!==1||!Array.isArray(d.income))return false;
+    applyData(d);return true;
+  }catch(e){return false;}
+}
+
+loadLS();
 computeAll();
 </script>
 
