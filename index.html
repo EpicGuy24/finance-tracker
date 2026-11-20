@@ -1781,9 +1781,7 @@ function updateGoalSummary(){
     if(start&&start>tod&&(!nextStart||start<nextStart)){nextStart=start;nextRow=row;}
   });
   if(activeMonthly===0&&nextRow)activeMonthly=getGoalMonthlyContrib(nextRow);
-  if(n===0){el.textContent='';return;}
-  const pct=totalAmt>0?Math.round(totalPaid/totalAmt*100):0;
-  el.textContent=n+' goal'+(n!==1?'s':'')+' · $'+Math.round(activeMonthly)+'/mo planned · '+pct+'% funded';
+  el.textContent='';
 }
 
 /* ── COMPUTE ALL ── */
