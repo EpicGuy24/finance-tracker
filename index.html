@@ -106,7 +106,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 #il2 .row-bar-fill{background:var(--b2);}
 #il3 .row-bar-fill{background:var(--b3);}
 #il3 .irow{flex-wrap:wrap;}
-.goal-meta{width:100%;font-size:10px;color:var(--muted);padding:0 2px 3px 2px;line-height:1.4;}
+.goal-meta{flex:0 0 42%;font-size:10px;color:var(--muted);padding:0 2px 3px 2px;line-height:1.4;min-width:0;}
 .goal-freq-icon{font-size:10px;font-weight:700;color:var(--b3);background:rgba(13,148,136,.15);padding:1px 5px;border-radius:4px;flex-shrink:0;letter-spacing:.02em;}
 .goal-freq-icon:empty{display:none;}
 .idot{flex-shrink:0;color:var(--border);font-size:10px;user-select:none;}
@@ -1734,7 +1734,7 @@ function updateGoalMeta(row){
   }
   const freq=row.dataset.goalFreq||'monthly';
   const paid=calcGoalPaid(row);
-  if(meta)meta.textContent=fmt(paid)+' saved  ·  '+fmt(total)+' goal';
+  if(meta)meta.textContent=fmt(paid)+' / '+fmt(total);
   if(freqIcon)freqIcon.textContent=freq==='weekly'?'↻ 1w':freq==='biweekly'?'↻ 2w':'↻ mo';
 }
 function getGoalMonthlyContrib(row){
