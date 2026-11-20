@@ -1494,9 +1494,9 @@ function initRecurringUI(){
     if(row.closest('#il3'))return;
     let btn=row.querySelector('.irec');
     if(!btn){
-      const delBtn=row.querySelector('.idel');if(!delBtn)return;
+      const refEl=row.querySelector('.idue')||row.querySelector('.idel');if(!refEl)return;
       btn=document.createElement('button');
-      row.insertBefore(btn,delBtn);
+      row.insertBefore(btn,refEl);
     }
     const endD=parseEndDate(row);
     btn.className='irec'+(row.dataset.recurring?' irec-on':'')+(endD?' irec-end':'');
@@ -1863,9 +1863,9 @@ function addItem(b){
       '<span class="goal-meta"></span>'+
       '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
       '<span class="iamt" contenteditable="false" data-b="3" style="pointer-events:none">$0</span>'+
+      '<span class="goal-freq-icon"></span>'+
       '<span class="idue"><span class="idate">No deadline</span>'+
       '<span class="ibadge ib-fine"></span></span>'+
-      '<span class="goal-freq-icon"></span>'+
       '<button class="igoal-btn igoal-on" title="Goal settings" onclick="openGoalPopup(this)">⚙</button>'+
       '<button class="idel" onclick="del(this)">×</button>';
     list.prepend(row);
@@ -1875,9 +1875,9 @@ function addItem(b){
     row.innerHTML='<span class="iname ph" contenteditable="true" data-ph="New item">New item</span>'+
       '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
       '<span class="iamt" contenteditable="true" data-b="'+b+'">$0</span>'+
+      '<button class="irec" title="Recurring">↻</button>'+
       '<span class="idue"><span class="idate">'+defaultDueStr()+'</span>'+
       '<span class="ibadge ib-fine">21d</span></span>'+
-      '<button class="irec" title="Recurring">↻</button>'+
       '<button class="iset-btn" title="Item settings" onclick="openSettingsPopup(this)">⚙</button>'+
       '<button class="idel" onclick="del(this)">×</button>';
     list.prepend(row);
@@ -2111,17 +2111,17 @@ function applyData(data){
           '<span class="goal-meta"></span>'+
           '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
           '<span class="iamt" contenteditable="false" data-b="'+b+'" style="pointer-events:none">$0</span>'+
-          '<span class="idue"><span class="idate">No deadline</span><span class="ibadge ib-fine"></span></span>'+
           '<span class="goal-freq-icon"></span>'+
+          '<span class="idue"><span class="idate">No deadline</span><span class="ibadge ib-fine"></span></span>'+
           '<button class="igoal-btn" title="Goal settings" onclick="openGoalPopup(this)">⚙</button>'+
           '<button class="idel" onclick="del(this)">×</button>';
       } else {
         row.innerHTML='<span class="iname" contenteditable="true">'+escHtml(item.name||'New item')+'</span>'+
           '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
           '<span class="iamt" contenteditable="true" data-b="'+b+'">'+escHtml(item.amt||'$0')+'</span>'+
+          '<button class="irec" title="Recurring">↻</button>'+
           '<span class="idue"><span class="idate">'+escHtml(item.due||'')+'</span>'+
           '<span class="ibadge ib-fine">—</span></span>'+
-          '<button class="irec" title="Recurring">↻</button>'+
           '<button class="iset-btn" title="Item settings" onclick="openSettingsPopup(this)">⚙</button>'+
           '<button class="idel" onclick="del(this)">×</button>';
         const dateEl=row.querySelector('.idate');
