@@ -105,6 +105,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 #il1 .row-bar-fill{background:var(--b1);}
 #il2 .row-bar-fill{background:var(--b2);}
 #il3 .row-bar-fill{background:var(--b3);}
+#il3 .irow{flex-wrap:wrap;}
+.goal-meta{width:100%;font-size:10px;color:var(--muted);padding:0 2px 3px 2px;line-height:1.4;}
 .idot{flex-shrink:0;color:var(--border);font-size:10px;user-select:none;}
 .iamt{flex:0 0 72px;overflow:hidden;text-align:right;font-size:12px;font-weight:500;
   color:var(--text);outline:none;border-bottom:1px dashed transparent;transition:border-color .15s;
@@ -464,7 +466,7 @@ function updateCascade(id,pct,total,target){
 /* ── BADGES (expense rows only) ── */
 function updateBadges(){
   document.querySelectorAll('.irow:not(.inc-entry)').forEach(row=>{
-    if(row.dataset.goalTotal)return;
+    if(row.closest('#il3'))return;
     const dateEl=row.querySelector('.idate'),badgeEl=row.querySelector('.ibadge');
     if(!dateEl||!badgeEl)return;
     const d=parseDueDate(dateEl.textContent);
@@ -1269,6 +1271,50 @@ function drawGraph2(){
   const _btn=document.getElementById('g2-today-btn');
   if(_btn)_btn.style.display=panOffset===0?'none':'inline-block';
   svg.innerHTML=g;
+  /* ── hover interactivity ── */
+  {
+    const NS='http://www.w3.org/2000/svg';
+    const _sb=pastInc-pastDue;
+    const _cash=[];{let _b=_sb;for(let D=0;D<=WIN;D++){_b+=incOnDay[D]-peaked[D]-savingsBar[D];_cash.push(_b);}}
+    let _hg=svg.querySelector('.g2-hl');if(_hg)_hg.remove();
+    let _capOld=svg.querySelector('.g2-cap');if(_capOld)_capOld.remove();
+    /* visuals group — pointer-events:none so it never intercepts the capture rect */
+    _hg=document.createElementNS(NS,'g');_hg.setAttribute('class','g2-hl');_hg.setAttribute('pointer-events','none');svg.appendChild(_hg);
+    /* capture rect appended AFTER _hg so it sits on top in z-order */
+    const _cap=document.createElementNS(NS,'rect');
+    _cap.setAttribute('class','g2-cap');
+    _cap.setAttribute('x',lm);_cap.setAttribute('y',tm);_cap.setAttribute('width',pw);_cap.setAttribute('height',ph+bm);
+    _cap.setAttribute('fill','transparent');svg.appendChild(_cap);
+    let _lastD=-1;
+    const _clr=()=>{_lastD=-1;while(_hg.childNodes.length>0)_hg.removeChild(_hg.lastChild);};
+    const _el=(tag,at)=>{const e=document.createElementNS(NS,tag);Object.entries(at).forEach(([k,v])=>e.setAttribute(k,v));return e;};
+    const _tx=(x,y,s,op={})=>{const e=_el('text',{x,y,'font-size':op.sz||10,'font-family':'Inter,sans-serif',fill:op.c||'#94A3B8',...(op.a?{'text-anchor':op.a}:{}),...(op.w?{'font-weight':op.w}:{})});e.textContent=s;return e;};
+    _cap.addEventListener('mousemove',ev=>{
+      const r=svg.getBoundingClientRect();
+      const D=Math.max(0,Math.min(WIN,Math.floor((ev.clientX-r.left-lm)/slotW)));
+      if(D===_lastD)return;
+      _lastD=D;
+      _clr();_lastD=D;
+      const cx=bx2(D)+barW/2;
+      _hg.appendChild(_el('rect',{x:(lm+D*slotW).toFixed(1),y:tm,width:slotW.toFixed(1),height:ph,fill:'rgba(255,255,255,0.07)',rx:2}));
+      _hg.appendChild(_el('line',{x1:cx.toFixed(1),y1:tm,x2:cx.toFixed(1),y2:H-bm,stroke:'rgba(255,255,255,0.18)','stroke-width':1}));
+      const oy=dy2(_cash[D]);
+      _hg.appendChild(_el('circle',{cx:cx.toFixed(1),cy:oy.toFixed(1),r:4.5,fill:'#F97316',stroke:'white','stroke-width':1.5}));
+      const TW=165,TH=108;
+      let ttx=cx+14;if(ttx+TW>W-rm)ttx=cx-TW-14;
+      const tty=Math.max(tm+4,Math.min(H-bm-TH-4,oy-TH/2));
+      _hg.appendChild(_el('rect',{x:ttx.toFixed(1),y:tty.toFixed(1),width:TW,height:TH,rx:7,fill:'rgba(15,23,42,0.93)',stroke:'rgba(100,116,139,0.35)','stroke-width':1}));
+      const _dd=new Date(tod);_dd.setDate(tod.getDate()+D);
+      _hg.appendChild(_tx(ttx+TW/2,tty+17,(D===0&&panOffset===0)?'Today':MN[_dd.getMonth()]+' '+_dd.getDate(),{sz:11,c:'#E2E8F0',a:'middle',w:600}));
+      _hg.appendChild(_el('line',{x1:(ttx+10).toFixed(1),y1:(tty+24).toFixed(1),x2:(ttx+TW-10).toFixed(1),y2:(tty+24).toFixed(1),stroke:'rgba(100,116,139,0.3)','stroke-width':1}));
+      [['Cash',_cash[D],'#F97316'],['Expenses',traj[D],'#94A3B8'],['Savings',savingsTraj[D],'#94A3B8'],['Goals',goalTraj[D],'#94A3B8']].forEach(([lb,v,c],i)=>{
+        const ry=tty+40+i*17;
+        _hg.appendChild(_tx(ttx+10,ry,lb,{c}));
+        _hg.appendChild(_tx(ttx+TW-10,ry,fmt(v),{c,a:'end'}));
+      });
+    });
+    _cap.addEventListener('mouseleave',_clr);
+  }
   document.querySelectorAll('#il3 .irow[data-goal-total]').forEach(row=>{
     const bar=row.querySelector('.row-bar-fill');if(!bar)return;
     const goalTotal=parseFloat(row.dataset.goalTotal||0);
@@ -1633,6 +1679,7 @@ function updateRowBars(){
         const paid=calcGoalPaid(row);
         const pct=goalTotal>0?Math.min(paid/goalTotal,1):0;
         bar.style.setProperty('--fill',(pct*100).toFixed(1)+'%');
+        updateGoalMeta(row);
         return;
       }
       const cost=parseAmt((row.querySelector('.iamt')||{}).textContent||'0');
@@ -1672,6 +1719,15 @@ function calcGoalPaid(row,asOf){
   const total=parseFloat(row.dataset.goalTotal||0);
   return Math.min(perPeriod*count,total);
 }
+function updateGoalMeta(row){
+  const meta=row.querySelector('.goal-meta');if(!meta)return;
+  const total=parseFloat(row.dataset.goalTotal||0);
+  if(!total){meta.textContent='';return;}
+  const freq=row.dataset.goalFreq||'monthly';
+  const paid=calcGoalPaid(row);
+  const freqLabel=freq==='weekly'?'weekly':freq==='biweekly'?'bi-weekly':'monthly';
+  meta.textContent=fmt(paid)+' saved  ·  '+fmt(total)+' goal  ·  '+freqLabel;
+}
 function getGoalMonthlyContrib(row){
   const freq=row.dataset.goalFreq||'monthly';
   const pp=calcGoalContribution(row);
@@ -1699,6 +1755,7 @@ function updateGoalRowDisplay(row){
     idateEl.textContent='No deadline';
     if(ibadgeEl){ibadgeEl.textContent='';ibadgeEl.className='ibadge';}
   }
+  updateGoalMeta(row);
 }
 function updateGoalSummary(){
   const el=document.getElementById('il3-summary');if(!el)return;
@@ -1799,7 +1856,8 @@ function addItem(b){
       '<span class="idue"><span class="idate">No deadline</span>'+
       '<span class="ibadge ib-fine"></span></span>'+
       '<button class="igoal-btn igoal-on" title="Goal settings" onclick="openGoalPopup(this)">⚙</button>'+
-      '<button class="idel" onclick="del(this)">×</button>';
+      '<button class="idel" onclick="del(this)">×</button>'+
+      '<span class="goal-meta"></span>';
     list.prepend(row);
     computeAll();
     setTimeout(()=>{const btn=row.querySelector('.igoal-btn');if(btn)openGoalPopup(btn);},50);
@@ -2038,13 +2096,14 @@ function applyData(data){
       if(item.goalStart)row.dataset.goalStart=item.goalStart;
       if(item.goalDeadline)row.dataset.goalDeadline=item.goalDeadline;
       if(item.goalFreq)row.dataset.goalFreq=item.goalFreq;
-      if(item.goalTotal){
+      if(b===3){
         row.innerHTML='<span class="iname" contenteditable="true">'+escHtml(item.name||'New goal')+'</span>'+
           '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
           '<span class="iamt" contenteditable="false" data-b="'+b+'" style="pointer-events:none">$0</span>'+
           '<span class="idue"><span class="idate">No deadline</span><span class="ibadge ib-fine"></span></span>'+
           '<button class="igoal-btn" title="Goal settings" onclick="openGoalPopup(this)">⚙</button>'+
-          '<button class="idel" onclick="del(this)">×</button>';
+          '<button class="idel" onclick="del(this)">×</button>'+
+          '<span class="goal-meta"></span>';
       } else {
         row.innerHTML='<span class="iname" contenteditable="true">'+escHtml(item.name||'New item')+'</span>'+
           '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
