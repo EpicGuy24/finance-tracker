@@ -1805,9 +1805,14 @@ function computeAll(){
     const b=parseInt(el.dataset.b,10)-1;
     if(b>=0&&b<3)totals[b]+=parseAmt(el.textContent);
   });
+  {const _gTod=new Date();_gTod.setHours(0,0,0,0);let _gNext=null,_gNextSt=null;
   document.querySelectorAll('#il3 .irow[data-goal-total]').forEach(row=>{
-    totals[2]+=getGoalMonthlyContrib(row);
+    const _gs=row.dataset.goalStart?new Date(row.dataset.goalStart+'T00:00:00'):null;
+    const _gd=row.dataset.goalDeadline?new Date(row.dataset.goalDeadline+'T00:00:00'):null;
+    if(_gs&&_gs<=_gTod&&(!_gd||_gTod<=_gd))totals[2]+=getGoalMonthlyContrib(row);
+    if(_gs&&_gs>_gTod&&(!_gNextSt||_gs<_gNextSt)){_gNextSt=_gs;_gNext=row;}
   });
+  if(totals[2]===0&&_gNext)totals[2]+=getGoalMonthlyContrib(_gNext);}
   const targets=totals;
   /* monthly expenses only for bucket fill (calendar-month window) */
   const _bTod=new Date();_bTod.setHours(0,0,0,0);
