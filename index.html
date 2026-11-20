@@ -949,7 +949,7 @@ function drawGraph2(){
         prev=exp.prevDay;occ=exp.dud;
         for(let i=0;i<exp.occs.length;i++){if(exp.occs[i]<D){prev=exp.occs[i];occ=exp.occs[i+1]??exp.occs[i]+30;}else break;}
       } else {
-        prev=Math.min(exp.dud-exp.period,0);occ=exp.dud;
+        prev=exp.dud-exp.period;occ=exp.dud;
         while(occ<D){prev=occ;occ+=exp.period;}
       }
       if(occ>prev&&(exp.endDay===undefined||occ<=exp.endDay)){
