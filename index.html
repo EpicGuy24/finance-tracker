@@ -1144,11 +1144,11 @@ function drawGraph2(){
     g+=`<line x1="${lm}" y1="${zy}" x2="${W-rm}" y2="${zy}" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>`;
     g+=`<text x="${lm-5}" y="${(+zy+5).toFixed(1)}" text-anchor="end" fill="#94A3B8" font-size="14" font-family="Inter,sans-serif">$0</text>`;
     /* area fill removed */
-    g+=`<path d="${stepPath}" fill="none" stroke="#D97706" stroke-width="2" opacity="0.8"/>`;
+    g+=`<path d="${stepPath}" fill="none" stroke="var(--inc)" stroke-width="2" opacity="0.8"/>`;
     const labelY=dy2(curBal);
     const isDeficit=curBal<0;
     const labelText=isDeficit?`Shortfall ${fmt(Math.abs(curBal))}`:`Bal. ${fmt(curBal)}`;
-    const labelCol=isDeficit?'#94A3B8':'#D97706';
+    const labelCol=isDeficit?'#94A3B8':'var(--inc)';
     g+=`<text x="${(W-rm-2).toFixed(1)}" y="${(labelY-4).toFixed(1)}" text-anchor="end" fill="${labelCol}" font-size="11" font-weight="600" font-family="Inter,sans-serif">${labelText}</text>`;
   }
 
