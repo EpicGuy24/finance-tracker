@@ -6,7 +6,7 @@
   --bg:#FFFFFF; --surface:#FFFFFF; --surface2:#F8FAFC;
   --border:#E2E8F0; --border2:#F1F5F9; --muted:#94A3B8;
   --text:#0F172A; --text2:#334155; --text3:#64748B;
-  --b1:#6366F1; --b2:#2563EB; --b3:#0D9488;
+  --b1:#16A34A; --b2:#2563EB; --b3:#0D9488;
   --inc:#D97706; --inc-bg:#FFFBEB;
   --danger:#DC2626; --warn:#D97706; --safe:#16A34A;
   color-scheme:light;
@@ -15,7 +15,7 @@
   --bg:#0F172A; --surface:#1E293B; --surface2:#172031;
   --border:#334155; --border2:#1E293B; --muted:#64748B;
   --text:#F1F5F9; --text2:#CBD5E1; --text3:#94A3B8;
-  --b1:#818CF8; --b2:#60A5FA; --b3:#2DD4BF;
+  --b1:#4ADE80; --b2:#60A5FA; --b3:#2DD4BF;
   --inc:#FCD34D; --inc-bg:rgba(252,211,77,.12);
   color-scheme:dark;
 }}
@@ -23,7 +23,7 @@
   --bg:#0F172A; --surface:#1E293B; --surface2:#172031;
   --border:#334155; --border2:#1E293B; --muted:#64748B;
   --text:#F1F5F9; --text2:#CBD5E1; --text3:#94A3B8;
-  --b1:#818CF8; --b2:#60A5FA; --b3:#2DD4BF;
+  --b1:#4ADE80; --b2:#60A5FA; --b3:#2DD4BF;
   --inc:#FCD34D; --inc-bg:rgba(252,211,77,.12);
   color-scheme:dark;
 }
@@ -158,14 +158,15 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .graph-wrap{border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:18px;}
 .graph-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
 .graph-title{font-size:13px;font-weight:600;}
+#g2-wrap{user-select:none;}
 .graph-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
 .graph-stats{display:flex;gap:12px;font-size:11px;color:var(--text3);flex-wrap:wrap;justify-content:flex-end;}
 .graph-stats strong{color:var(--text);font-weight:600;}
 .graph-bal{font-size:16px;font-weight:700;}
 .graph-bal.pos{color:#15803D;} .graph-bal.neg{color:#DC2626;}
 .graph-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;}
-.print-graph-title{display:none;}
-@media print{.print-graph-title{display:block;font-size:16px;font-weight:700;margin-bottom:14px;border-bottom:1px solid #ccc;padding-bottom:6px;}}
+.print-graph-title{font-size:16px;font-weight:700;margin-bottom:8px;border-bottom:1px solid #ccc;padding-bottom:6px;}
+.print-graph-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:11px;color:#555;}
 .leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
 .leg-line{width:18px;height:2.5px;border-radius:1px;}
 .leg-dash{width:18px;height:0;border-top:2px dashed;}
@@ -184,6 +185,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .irow.drag-over{border-top:2px solid var(--b2);}
 .irec{flex-shrink:0;width:36px;overflow:hidden;background:none;border:none;cursor:pointer;font-size:10px;color:var(--muted);padding:1px 4px;border-radius:4px;opacity:0;transition:opacity .15s,color .15s,background .15s;line-height:1;}
 .irow:hover .irec{opacity:1;}
+.irec.irec-end{border-bottom:1.5px dashed var(--muted);}
 .irec.irec-on{opacity:1;color:var(--b2);background:rgba(37,99,235,.12);}
 .rec-popup{position:fixed;z-index:9999;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.18);padding:4px;min-width:148px;display:none;}
 .rec-popup.open{display:block;}
@@ -225,6 +227,23 @@ span.flatpickr-weekday{font-size:10px;font-weight:600;color:var(--muted);text-al
   .graph-wrap{display:none!important;}
   #print-graph-clone{text-align:center;}
 }
+.igoal-btn{flex-shrink:0;width:28px;background:none;border:none;cursor:pointer;font-size:12px;color:var(--muted);padding:1px 4px;border-radius:4px;opacity:0;transition:opacity .15s;}
+.irow:hover .igoal-btn{opacity:1;}
+.igoal-btn.igoal-on{opacity:1;color:var(--b3);background:rgba(13,148,136,.12);}
+#il3-summary{font-size:10px;color:var(--muted);padding:0 8px 4px;min-height:14px;}
+#goal-popup{position:fixed;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);padding:0;min-width:230px;display:none;}
+.gp-row{display:flex;align-items:center;gap:6px;padding:4px 10px;}
+.gp-label{font-size:11px;color:var(--muted);flex:0 0 68px;}
+.gp-input{flex:1;font-size:11px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text2);}
+.gp-freq{display:flex;gap:4px;}
+.gp-freq button{font-size:10px;padding:2px 7px;border:1px solid var(--border);border-radius:4px;background:none;color:var(--muted);cursor:pointer;}
+.gp-freq button.active{background:var(--b3);color:#fff;border-color:var(--b3);}
+.gp-calc{font-size:11px;color:var(--b3);padding:4px 10px 7px;font-weight:600;}
+.iset-btn{flex-shrink:0;width:22px;background:none;border:none;cursor:pointer;font-size:12px;color:var(--muted);padding:1px 3px;border-radius:4px;opacity:0;transition:opacity .15s;}
+.irow:hover .iset-btn{opacity:1;}
+.iset-btn.iset-on{opacity:1;color:var(--b2);background:rgba(37,99,235,.1);}
+#il1 .irec,#il2 .irec{pointer-events:none;}
+#settings-popup{position:fixed;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);padding:0;min-width:220px;display:none;}
 </style>
 
 <!-- HEADER -->
@@ -345,6 +364,7 @@ span.flatpickr-weekday{font-size:10px;font-weight:600;color:var(--muted);text-al
   </div>
   <div class="dcol">
     <div class="dhead"><span class="dname">Wants &amp; Goals</span><span class="dtot" id="dt3">$425 of $1,500</span></div>
+    <div id="il3-summary"></div>
     <button class="addbtn" onclick="addItem(3)">+ Add goal</button>
     <div class="ilist" id="il3">
     </div>
@@ -355,11 +375,10 @@ span.flatpickr-weekday{font-size:10px;font-weight:600;color:var(--muted);text-al
 <div style="height:16px"></div>
 
 <!-- ══ OBLIGATION OUTLOOK ══ -->
-<div class="print-graph-title" id="print-graph-title">Finance Tracker — <span id="print-graph-month"></span></div>
-<div class="graph-wrap">
+<div class="graph-wrap" id="g2-wrap">
   <div class="graph-hd">
     <div>
-      <div class="graph-title">30-Day Obligation Outlook</div>
+      <div class="graph-title" style="display:flex;align-items:center;gap:8px;">Obligation Outlook<button id="g2-today-btn" onclick="panOffset=0;drawGraph2();" style="display:none;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">↩ Today</button></div>
       <div class="graph-stats" style="margin-top:4px">
         <span>Current surplus: <strong id="g2-today">—</strong></span>
         <span>Peak obligation: <strong id="g2-rate">—</strong></span>
@@ -370,7 +389,7 @@ span.flatpickr-weekday{font-size:10px;font-weight:600;color:var(--muted);text-al
       <div style="font-size:10px;color:var(--muted)">blue = obligations · orange = your surplus</div>
     </div>
   </div>
-  <svg id="urgency-chart" viewBox="0 0 836 480" width="100%" preserveAspectRatio="xMinYMin meet" role="img" aria-label="30-day obligation chart"></svg>
+  <svg id="urgency-chart" viewBox="0 0 836 480" width="100%" preserveAspectRatio="xMinYMin meet" role="img" aria-label="obligation chart" style="display:block;cursor:grab;"></svg>
   <div class="graph-legend">
     <div class="leg"><div style="width:18px;height:10px;background:var(--b2);opacity:0.45;border-radius:2px"></div>Amount due on that day</div>
     <div class="leg"><div style="width:18px;height:10px;background:var(--b2);opacity:0.15;border-radius:2px"></div>Accumulating (not yet due)</div>
@@ -445,6 +464,7 @@ function updateCascade(id,pct,total,target){
 /* ── BADGES (expense rows only) ── */
 function updateBadges(){
   document.querySelectorAll('.irow:not(.inc-entry)').forEach(row=>{
+    if(row.dataset.goalTotal)return;
     const dateEl=row.querySelector('.idate'),badgeEl=row.querySelector('.ibadge');
     if(!dateEl||!badgeEl)return;
     const d=parseDueDate(dateEl.textContent);
@@ -513,15 +533,64 @@ function getMonthlyIncomeTotal(){
     if(!row.dataset.recurring){
       if(d.getFullYear()===yr&&d.getMonth()===mo)total+=amount;
     } else {
+      const endD=parseEndDate(row);
       const period=row.dataset.recurring==='weekly'?7:row.dataset.recurring==='biweekly'?14:30;
       if(period===30){
         const occ=new Date(yr,mo,d.getDate());
-        if(occ>=monthStart&&occ<=monthEnd)total+=amount;
+        if(occ>=monthStart&&occ<=monthEnd&&(!endD||occ<=endD))total+=amount;
       } else {
         let occ=new Date(d);
         while(occ<monthStart)occ.setDate(occ.getDate()+period);
-        while(occ<=monthEnd){total+=amount;occ.setDate(occ.getDate()+period);}
+        while(occ<=monthEnd){if(!endD||occ<=endD)total+=amount;occ.setDate(occ.getDate()+period);}
       }
+    }
+  });
+  return total;
+}
+
+function getNormMonthlyIncomeTotal(){
+  const tod=new Date();tod.setHours(0,0,0,0);
+  const yr=tod.getFullYear(),mo=tod.getMonth();
+  let total=0;
+  document.querySelectorAll('.inc-entry').forEach(row=>{
+    const dateEl=row.querySelector('.idate-lead'),amtEl=row.querySelector('.iamt');
+    if(!dateEl||!amtEl)return;
+    const d=parseDueDate(dateEl.textContent);
+    const amount=parseAmt(amtEl.textContent);
+    if(!d||amount<=0)return;
+    const endD=parseEndDate(row);
+    if(endD&&endD<tod)return;
+    if(!row.dataset.recurring){
+      if(d.getFullYear()===yr&&d.getMonth()===mo)total+=amount;
+    } else if(row.dataset.recurring==='weekly'){
+      total+=amount*52/12;
+    } else if(row.dataset.recurring==='biweekly'){
+      total+=amount*26/12;
+    } else {
+      total+=amount;
+    }
+  });
+  return total;
+}
+
+function getWindow31IncomeTotal(){
+  const tod=new Date();tod.setHours(0,0,0,0);
+  const WIN=31;
+  let total=0;
+  document.querySelectorAll('.inc-entry').forEach(row=>{
+    const iDE=row.querySelector('.idate-lead'),iAE=row.querySelector('.iamt');
+    if(!iDE||!iAE)return;
+    const id=parseDueDate(iDE.textContent),ia=parseAmt(iAE.textContent);
+    if(!id||ia<=0)return;
+    if(!row.dataset.recurring){
+      const dd=Math.round((id-tod)/86400000);
+      if(dd<=WIN)total+=ia;
+    } else {
+      const ip=row.dataset.recurring==='weekly'?7:row.dataset.recurring==='biweekly'?14:30;
+      const endD=parseEndDate(row);
+      let ic=new Date(id);
+      while(ic<=tod){if(!endD||ic<=endD)total+=ia;if(ip===30)ic=advMon(ic);else ic.setDate(ic.getDate()+ip);}
+      while(true){const dd=Math.round((ic-tod)/86400000);if(dd>WIN)break;if(endD&&ic>endD)break;total+=ia;if(ip===30)ic=advMon(ic);else ic.setDate(ic.getDate()+ip);}
     }
   });
   return total;
@@ -715,16 +784,44 @@ function drawGraph(){
 function drawGraph2(){
   const svg=document.getElementById('urgency-chart');if(!svg)return;
   const tod=new Date();tod.setHours(0,0,0,0);
-  const WIN=30;
+  const realTod=new Date(tod);
+  const WIN=31;
+  const WIN_AXIS=93; /* wider window for stable axis — prevents grid jumping on pan */
+  /* end-of-month snapping: if d is the last day of its month, advance to last day of next month */
+  const advMon=d=>{const ld=new Date(d.getFullYear(),d.getMonth()+1,0);return d.getDate()>=ld.getDate()?new Date(d.getFullYear(),d.getMonth()+2,0):new Date(d.getFullYear(),d.getMonth()+1,d.getDate());};
+  tod.setDate(tod.getDate()+panOffset);
   const incTotal=getMonthlyIncomeTotal();
 
-  /* current surplus = income minus past-due expenses */
+  /* past-due expenses relative to panned tod — mirrors how pastInc works for income */
   let pastDue=0;
   document.querySelectorAll('.irow:not(.inc-entry)').forEach(row=>{
     const dateEl=row.querySelector('.idate'),amtEl=row.querySelector('.iamt[data-b]');
     if(!dateEl||!amtEl)return;
     const d=parseDueDate(dateEl.textContent),amount=parseAmt(amtEl.textContent);
-    if(d&&d<tod&&amount>0)pastDue+=amount;
+    if(!d||amount<=0)return;
+    if(!row.dataset.recurring){
+      if(d<tod)pastDue+=amount;
+    } else {
+      const isMonthly=row.dataset.recurring!=='weekly'&&row.dataset.recurring!=='biweekly';
+      const endD=parseEndDate(row);
+      let occ=new Date(d);
+      while(occ<tod){
+        if(!endD||occ<=endD)pastDue+=amount;
+        if(isMonthly)occ=advMon(occ);
+        else occ.setDate(occ.getDate()+(row.dataset.recurring==='weekly'?7:14));
+      }
+      /* savings items: add elapsed daily setaside for current in-progress period */
+      if(row.closest('#il1')&&(!endD||occ<=endD)){
+        let _ps;
+        if(isMonthly)_ps=new Date(occ.getFullYear(),occ.getMonth(),1);
+        else{_ps=new Date(occ);_ps.setDate(_ps.getDate()-(row.dataset.recurring==='weekly'?7:14));}
+        if(_ps<tod){
+          const _pd=Math.round((occ-_ps)/86400000)+1;
+          const _el=Math.round((tod-_ps)/86400000);
+          if(_pd>0&&_el>0)pastDue+=amount*_el/_pd;
+        }
+      }
+    }
   });
   const surplus=incTotal-pastDue;
 
@@ -736,38 +833,110 @@ function drawGraph2(){
     if(!dateEl||!amtEl)return;
     const d=parseDueDate(dateEl.textContent),amount=parseAmt(amtEl.textContent);
     if(!d||amount<=0)return;
+    if(row.dataset.itemStart){
+      const _sd=new Date(row.dataset.itemStart+'T00:00:00');
+      if(row.closest('#il1')&&row.dataset.recurring){
+        /* savings: visible if period-start of first occurrence falls within the window */
+        const _isM2=row.dataset.recurring!=='weekly'&&row.dataset.recurring!=='biweekly';
+        let _ps2;
+        if(_isM2)_ps2=new Date(_sd.getFullYear(),_sd.getMonth(),1);
+        else{_ps2=new Date(_sd);_ps2.setDate(_ps2.getDate()-(row.dataset.recurring==='weekly'?7:14));}
+        const _winEnd=new Date(tod);_winEnd.setDate(tod.getDate()+WIN_AXIS);
+        if(_ps2>_winEnd)return;
+      } else {if(tod<_sd)return;}
+    }
     if(row.dataset.recurring){
       const isMonthly=row.dataset.recurring!=='weekly'&&row.dataset.recurring!=='biweekly';
       const period=isMonthly?30:row.dataset.recurring==='weekly'?7:14;
       let occ=new Date(d);
-      if(isMonthly){while(occ<tod)occ=new Date(occ.getFullYear(),occ.getMonth()+1,occ.getDate());}
+      if(isMonthly){while(occ<tod)occ=advMon(occ);}
       else{while(occ<tod)occ.setDate(occ.getDate()+period);}
+      const endD=parseEndDate(row);
+      if(endD&&occ>endD)return;
       const dud=Math.max(0,Math.round((occ-tod)/86400000));
       if(isMonthly){
+        const isSavings=!!row.closest('#il1');
         const occs=[];
         let cur=new Date(occ),dd=dud;
-        while(dd<=WIN){occs.push(dd);cur=new Date(cur.getFullYear(),cur.getMonth()+1,cur.getDate());dd=Math.round((cur-tod)/86400000);}
-        const prevDate=new Date(occ.getFullYear(),occ.getMonth()-1,occ.getDate());
-        const prevDay=Math.round((prevDate-tod)/86400000);
-        recExp.push({amount,dud,period,monthly:true,occs,prevDay});
+        /* savings: include any occurrence whose period-start (1st of month) falls in the window */
+        while(true){
+          const _ps0=new Date(cur.getFullYear(),cur.getMonth(),1);
+          const _psd=Math.round((_ps0-tod)/86400000);
+          if(dd>WIN_AXIS&&!(isSavings&&_psd<=WIN_AXIS))break;
+          if(!endD||cur<=endD)occs.push(dd);
+          cur=advMon(cur);
+          dd=Math.round((cur-tod)/86400000);
+        }
+        if(occs.length===0)return;
+        let prevDay;
+        if(isSavings){
+          /* savings: period starts 1st of month for smooth accrual ramp */
+          const _ps=new Date(occ.getFullYear(),occ.getMonth(),1);
+          prevDay=Math.round((_ps-tod)/86400000);
+        } else {
+          const prevDate=new Date(occ.getFullYear(),occ.getMonth()-1,occ.getDate());
+          prevDay=Math.round((prevDate-tod)/86400000);
+          if(row.dataset.itemStart){const _isd=new Date(row.dataset.itemStart+'T00:00:00');if(prevDate<_isd)prevDay=dud;}
+        }
+        recExp.push({amount,dud,period,monthly:true,occs,prevDay,isSavings});
       } else {
-        recExp.push({amount,dud,period,monthly:false});
+        const endDay=endD?Math.round((endD-tod)/86400000):undefined;
+        const isSavings=!!row.closest('#il1');
+        recExp.push({amount,dud,period,monthly:false,endDay,isSavings});
       }
     } else {
       if(d>=tod){
         const dud=Math.max(0,Math.round((d-tod)/86400000));
-        if(dud<=WIN)nonRec.push({dud,amount});
+        if(dud<=WIN_AXIS)nonRec.push({dud,amount});
       }
     }
   });
+  /* goal contributions from il3 */
+  document.querySelectorAll('#il3 .irow[data-goal-total]').forEach(row=>{
+    const amount=calcGoalContribution(row);if(amount<=0)return;
+    const freq=row.dataset.goalFreq||'monthly';
+    const startD=row.dataset.goalStart?new Date(row.dataset.goalStart+'T00:00:00'):null;
+    const deadlineD=row.dataset.goalDeadline?new Date(row.dataset.goalDeadline+'T00:00:00'):null;
+    if(!startD)return;
+    const endDay=deadlineD?Math.round((deadlineD-tod)/86400000):undefined;
+    if(endDay!==undefined&&endDay<0)return;
+    if(freq==='monthly'){
+      const dom=startD.getDate();
+      const occs=[];
+      let cur=new Date(startD.getFullYear(),startD.getMonth(),dom);
+      if(cur<startD)cur=new Date(startD.getFullYear(),startD.getMonth()+1,dom);
+      let pastAmt=0;
+      while(true){
+        const dd=Math.round((cur-tod)/86400000);
+        if(dd>WIN_AXIS)break;
+        if(dd<0&&(endDay===undefined||dd<=endDay))pastAmt+=amount;
+        if(dd>=0&&(endDay===undefined||dd<=endDay))occs.push(dd);
+        cur=advMon(cur);
+      }
+      if(occs.length===0)return;
+      recExp.push({amount,dud:occs[0],period:30,monthly:true,endDay,occs,prevDay:occs[0]-30,isGoal:true,pastAmt});
+    } else {
+      const period=freq==='biweekly'?14:7;
+      let occ=new Date(startD);
+      let pastAmt=0;
+      while(occ<tod){if(!deadlineD||occ<=deadlineD)pastAmt+=amount;occ.setDate(occ.getDate()+period);}
+      const dud=Math.round((occ-tod)/86400000);
+      if(dud>WIN_AXIS)return;
+      recExp.push({amount,dud,period,monthly:false,endDay,isGoal:true,pastAmt});
+    }
+  });
+  /* fold past goal payments into pastDue so startBal reflects them */
+  recExp.forEach(exp=>{if(exp.isGoal&&exp.pastAmt)pastDue+=exp.pastAmt;});
 
   /* trajectory: accumulator per day
      non-recurring: amount × D/dud  (D ≤ dud only)
      recurring:     amount × (D−prev)/(occ−prev) where prev/occ are wave boundaries */
   const traj=[];
-  for(let D=0;D<=WIN;D++){
-    let v=0;
-    nonRec.forEach(exp=>{if(D<=exp.dud)v+=exp.dud===0?exp.amount:exp.amount*D/exp.dud;});
+  const savingsTraj=[];
+  const goalTraj=[];
+  for(let D=0;D<=WIN_AXIS;D++){
+    let ev=0,sv=0,gv=0;
+    nonRec.forEach(exp=>{if(D<=exp.dud)ev+=exp.dud===0?exp.amount:exp.amount*D/exp.dud;});
     recExp.forEach(exp=>{
       let prev,occ;
       if(exp.monthly){
@@ -777,26 +946,28 @@ function drawGraph2(){
         prev=Math.min(exp.dud-exp.period,0);occ=exp.dud;
         while(occ<D){prev=occ;occ+=exp.period;}
       }
-      if(occ>prev)v+=exp.amount*(D-prev)/(occ-prev);
+      if(occ>prev&&(exp.endDay===undefined||occ<=exp.endDay)){
+        const c=exp.amount*Math.max(0,D-prev)/(occ-prev);
+        if(exp.isSavings)sv+=c;
+        else if(exp.isGoal)gv+=c;
+        else ev+=c;
+      }
     });
-    traj.push(v);
+    traj.push(ev);
+    savingsTraj.push(sv);
+    goalTraj.push(gv);
   }
 
-  const peakV=Math.max(...traj,1);
-  const minCushion=surplus-peakV;
+  const peakV=Math.max(...traj.map((v,i)=>v+goalTraj[i]),1);
 
-  /* header */
-  const g2t=document.getElementById('g2-today');if(g2t)g2t.textContent=fmt(surplus);
+  /* header (g2-today and g2-status set after window data is computed below) */
+  const g2t=document.getElementById('g2-today');
   const g2r=document.getElementById('g2-rate');if(g2r)g2r.textContent=fmt(peakV);
   const g2s=document.getElementById('g2-status');
-  if(g2s){
-    if(minCushion>=0){g2s.textContent='Min cushion: '+fmt(minCushion);g2s.className='graph-bal pos';}
-    else{g2s.textContent='Shortfall: '+fmt(Math.abs(minCushion));g2s.className='graph-bal neg';}
-  }
 
   const W=836,H=480,lm=70,rm=15,tm=30,bm=55;
   const pw=W-lm-rm,ph=H-tm-bm;
-  const maxV=Math.max(surplus>0?surplus*1.08:peakV*1.4,peakV*1.2,500);
+  let maxV=Math.max(surplus>0?surplus*1.08:peakV*1.4,peakV*1.2,500);
   let _minBal=0;
   const dy2=v=>{const minV=Math.min(0,_minBal*1.1);const range=maxV-minV;return tm+ph*(1-(v-minV)/range);};
   const slotW=pw/(WIN+1);
@@ -810,17 +981,51 @@ function drawGraph2(){
 
   /* due date dots + peaked amounts */
   const dueDots={};
-  const peaked=new Array(WIN+1).fill(0);
+  const goalDots={};
+  const savingsDots={};
+  const peaked=new Array(WIN_AXIS+2).fill(0);
+  const savingsBar=new Array(WIN_AXIS+2).fill(0);
   nonRec.forEach(exp=>{
     dueDots[exp.dud]=(dueDots[exp.dud]||0)+exp.amount;
-    const pk1=exp.dud+1;if(pk1<=WIN)peaked[pk1]+=exp.amount;
+    const pk1=exp.dud+1;if(pk1<=WIN_AXIS)peaked[pk1]+=exp.amount;
   });
   recExp.forEach(exp=>{
-    if(exp.monthly){
-      exp.occs.forEach(dd=>{dueDots[dd]=(dueDots[dd]||0)+exp.amount;const pk2=dd+1;if(pk2<=WIN)peaked[pk2]+=exp.amount;});
+    if(exp.isSavings){
+      /* savings: dots in savingsDots, daily drain in savingsBar */
+      if(exp.monthly){
+        exp.occs.forEach(dd=>{
+          savingsDots[dd]=(savingsDots[dd]||0)+exp.amount;
+          const occDate=new Date(tod);occDate.setDate(tod.getDate()+dd);
+          const mStart=new Date(occDate.getFullYear(),occDate.getMonth(),1);
+          const startD=Math.round((mStart-tod)/86400000);
+          const periodDays=Math.max(1,dd-startD+1);
+          const daily=exp.amount/periodDays;
+          for(let D=Math.max(0,startD);D<=Math.min(dd,WIN_AXIS);D++)savingsBar[D]+=daily;
+        });
+      } else {
+        let occ=exp.dud;
+        /* include occurrence whose period-start (occ-period) is within the window */
+        while(occ<=WIN_AXIS||occ-exp.period<=WIN_AXIS){
+          if(exp.endDay===undefined||occ<=exp.endDay){
+            if(occ<=WIN)savingsDots[occ]=(savingsDots[occ]||0)+exp.amount;
+            const startD=occ-exp.period;
+            const daily=exp.amount/exp.period;
+            for(let D=Math.max(0,startD);D<=Math.min(occ-1,WIN_AXIS);D++)savingsBar[D]+=daily;
+          }
+          occ+=exp.period;
+        }
+      }
     } else {
-      let occ=exp.dud;
-      while(occ<=WIN){dueDots[occ]=(dueDots[occ]||0)+exp.amount;const pk2=occ+1;if(pk2<=WIN)peaked[pk2]+=exp.amount;occ+=exp.period;}
+      const dots=exp.isGoal?goalDots:dueDots;
+      if(exp.monthly){
+        exp.occs.forEach(dd=>{dots[dd]=(dots[dd]||0)+exp.amount;const pk2=dd+1;if(pk2<=WIN_AXIS)peaked[pk2]+=exp.amount;});
+      } else {
+        let occ=exp.dud;
+        while(occ<=WIN_AXIS){
+          if(exp.endDay===undefined||occ<=exp.endDay){dots[occ]=(dots[occ]||0)+exp.amount;const pk2=occ+1;if(pk2<=WIN_AXIS)peaked[pk2]+=exp.amount;}
+          occ+=exp.period;
+        }
+      }
     }
   });
 
@@ -832,15 +1037,16 @@ function drawGraph2(){
     if(!iDE||!iAE)return;
     const id=parseDueDate(iDE.textContent),ia=parseAmt(iAE.textContent);
     if(!id||ia<=0)return;
-    if(!row.dataset.recurring){if(id<=tod)pastInc+=ia;}
+    if(!row.dataset.recurring){if(id<tod)pastInc+=ia;}
     else{
       const ip=row.dataset.recurring==='weekly'?7:row.dataset.recurring==='biweekly'?14:30;
+      const endD=parseEndDate(row);
       let ic=new Date(id);
-      while(ic<=tod){pastInc+=ia;if(ip===30)ic=new Date(ic.getFullYear(),ic.getMonth()+1,ic.getDate());else ic.setDate(ic.getDate()+ip);}
+      while(ic<tod){if(!endD||ic<=endD)pastInc+=ia;if(ip===30)ic=advMon(ic);else ic.setDate(ic.getDate()+ip);}
     }
   });
   /* income arriving each day in window */
-  const incOnDay=new Array(WIN+1).fill(0);
+  const incOnDay=new Array(WIN_AXIS+2).fill(0);
   document.querySelectorAll('.inc-entry').forEach(row=>{
     const iDE=row.querySelector('.idate-lead'),iAE=row.querySelector('.iamt');
     if(!iDE||!iAE)return;
@@ -848,27 +1054,48 @@ function drawGraph2(){
     if(!id||ia<=0)return;
     if(!row.dataset.recurring){
       const dd=Math.round((id-tod)/86400000);
-      if(dd>=0&&dd<=WIN)incOnDay[dd]+=ia;
+      if(dd>=0&&dd<=WIN_AXIS)incOnDay[dd]+=ia;
     } else {
       const ip=row.dataset.recurring==='weekly'?7:row.dataset.recurring==='biweekly'?14:30;
+      const endD=parseEndDate(row);
       let io=new Date(id);
-      if(ip===30){while(io<tod)io=new Date(io.getFullYear(),io.getMonth()+1,io.getDate());}
+      if(ip===30){while(io<tod)io=advMon(io);}
       else{while(io<tod)io.setDate(io.getDate()+ip);}
       while(true){
         const dd=Math.round((io-tod)/86400000);
-        if(dd>WIN)break;
+        if(dd>WIN_AXIS)break;
+        if(endD&&io>endD)break;
         incOnDay[dd]+=ia;
-        if(ip===30)io=new Date(io.getFullYear(),io.getMonth()+1,io.getDate());
+        if(ip===30)io=advMon(io);
         else io.setDate(io.getDate()+ip);
       }
     }
   });
-  /* pre-pass: find minimum balance for y-axis range */
+  /* window net: starting cash + all income in window − all bills in window */
+  const winNet=pastInc-pastDue+incOnDay.slice(0,WIN+1).reduce((s,v)=>s+v,0)-peaked.slice(0,WIN+1).reduce((s,v)=>s+v,0)-savingsBar.slice(0,WIN+1).reduce((s,v)=>s+v,0);
+  if(g2t)g2t.textContent=fmt(winNet);
+
+  /* pre-pass: find min/max balance for y-axis range */
+  let _winMinBal=0;
   {
     const _sb=pastInc-pastDue;
     let _b=_sb;
     _minBal=_sb;
-    for(let D=0;D<=WIN;D++){if(incOnDay[D]>0||peaked[D]>0){_b+=incOnDay[D]-peaked[D];if(_b<_minBal)_minBal=_b;}}
+    let _maxBal=_sb;
+    for(let D=0;D<=WIN;D++){if(incOnDay[D]>0||peaked[D]>0||savingsBar[D]>0){_b+=incOnDay[D]-peaked[D]-savingsBar[D];if(_b<_minBal)_minBal=_b;if(_b>_maxBal)_maxBal=_b;}}
+    _winMinBal=_minBal; /* actual min in VISIBLE window (WIN days), for status display */
+    for(let D=WIN+1;D<=WIN_AXIS;D++){if(incOnDay[D]>0||peaked[D]>0||savingsBar[D]>0){_b+=incOnDay[D]-peaked[D]-savingsBar[D];if(_b<_minBal)_minBal=_b;if(_b>_maxBal)_maxBal=_b;}}
+    const _rawMaxV=Math.max(_maxBal*1.08,peakV*1.2,500);
+    /* axis frozen after data change — never updated while panning */
+    if(_axisFromComputeAll){_axisMaxSeen=_rawMaxV;_axisMinSeen=_minBal;_axisFromComputeAll=false;}
+    maxV=_axisMaxSeen;
+    _minBal=_axisMinSeen; /* dy2 reads this for coordinate mapping */
+  }
+
+  /* min cushion = lowest cash balance during the window (matches orange line low point) */
+  if(g2s){
+    if(_winMinBal>=0){g2s.textContent='Min cushion: '+fmt(_winMinBal);g2s.className='graph-bal pos';}
+    else{g2s.textContent='Shortfall: '+fmt(Math.abs(_winMinBal));g2s.className='graph-bal neg';}
   }
 
   /* unified grid — now that _minBal is known */
@@ -896,8 +1123,8 @@ function drawGraph2(){
     let stepPath=`M ${lm.toFixed(1)} ${dy2(startBal).toFixed(1)}`;
     let fillPath=`M ${lm.toFixed(1)} ${zy} L ${lm.toFixed(1)} ${dy2(startBal).toFixed(1)}`;
     for(let D=0;D<=WIN;D++){
-      if(incOnDay[D]>0||peaked[D]>0){
-        curBal+=incOnDay[D]-peaked[D];
+      if(incOnDay[D]>0||peaked[D]>0||savingsBar[D]>0){
+        curBal+=incOnDay[D]-peaked[D]-savingsBar[D];
         const ex=bx2(D).toFixed(1);
         const ey=dy2(curBal).toFixed(1);
         stepPath+=` H ${ex} V ${ey}`;
@@ -914,47 +1141,141 @@ function drawGraph2(){
     const isDeficit=curBal<0;
     const labelText=isDeficit?`Shortfall ${fmt(Math.abs(curBal))}`:`Bal. ${fmt(curBal)}`;
     const labelCol=isDeficit?'#94A3B8':'#D97706';
-    g+=`<text x="${(W-rm-2).toFixed(1)}" y="${(labelY-4).toFixed(1)}" text-anchor="end" fill="${labelCol}" font-size="14" font-weight="600" font-family="Inter,sans-serif">${labelText}</text>`;
+    g+=`<text x="${(W-rm-2).toFixed(1)}" y="${(labelY-4).toFixed(1)}" text-anchor="end" fill="${labelCol}" font-size="11" font-weight="600" font-family="Inter,sans-serif">${labelText}</text>`;
   }
 
-  /* obligation bars */
+  /* obligation bars — 5-layer priority stack from baseline:
+     1=full savings, 2=full expense, 3=full goal, 4=opaque expense, 5=opaque goal */
+  const _used=[];
+  const _fits=(cx,y,str,fs,ank='middle')=>{
+    const w=str.length*fs*0.6+4,h=fs+4;
+    const x0=ank==='end'?cx-w:ank==='start'?cx:cx-w/2;
+    const r={x0,x1:x0+w,y0:y-h,y1:y};
+    if(_used.some(u=>r.x1>u.x0&&r.x0<u.x1&&r.y1>u.y0&&r.y0<u.y1))return false;
+    _used.push(r);return true;
+  };
   for(let D=0;D<=WIN;D++){
-    const v=traj[D];
+    const ev=traj[D];
+    const gv=goalTraj[D];
+    const sv=savingsBar[D];
     const x=bx2(D).toFixed(1);
-    const bY=dy2(v).toFixed(1);
-    const bH=Math.max(1,dy2(0)-(+bY)).toFixed(1);
-    const col='var(--b2)';
-    const pk=dueDots[D]||0;
-    if(pk>0&&pk<v){
-      const pkY=dy2(pk).toFixed(1);
-      const pkH=Math.max(1,dy2(0)-(+pkY)).toFixed(1);
-      g+=`<rect x="${x}" y="${pkY}" width="${barW.toFixed(1)}" height="${pkH}" rx="1" fill="${col}" opacity="0.45"/>`;
-      const topH=Math.max(1,(+pkY)-(+bY)).toFixed(1);
-      g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${topH}" rx="1" fill="${col}" opacity="0.15"/>`;
-    } else {
-      const opacity=pk>0?'0.45':'0.15';
-      g+=`<rect x="${x}" y="${bY}" width="${barW.toFixed(1)}" height="${bH}" rx="1" fill="${col}" opacity="${opacity}"/>`;
+    const pk=dueDots[D]||0;    // expense payment due today
+    const pk3=goalDots[D]||0;  // goal payment due today
+    const ev_ghost=Math.max(0,ev-pk);   // expense accrual above payment
+    const gv_ghost=Math.max(0,gv-pk3);  // goal accrual above payment
+    const bW=barW.toFixed(1);
+
+    /* 1. Full savings — from 0 */
+    if(sv>0||savingsDots[D]){
+      const bot=dy2(0);
+      const top=Math.min(dy2(sv),bot-1);
+      g+=`<rect x="${x}" y="${top.toFixed(1)}" width="${bW}" height="${(bot-top).toFixed(1)}" rx="1" fill="var(--b1)" opacity="${savingsDots[D]?'0.95':'0.8'}"/>`;
+      if(sv>0&&!savingsDots[D]){
+        const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
+        const _lbl=`$${Math.round(sv)}`,_cx=+x+barW/2,_y=top-3;
+        if(_fits(_cx,_y,_lbl,10,ank)){g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b1)" font-size="10" font-family="Inter,sans-serif" opacity="0.9">${_lbl}</text>`;}
+      }
     }
 
+    /* 2. Full expense — solid payment portion, stacked on savings */
+    if(pk>0){
+      const bot=dy2(sv);
+      const top=dy2(sv+pk);
+      g+=`<rect x="${x}" y="${top.toFixed(1)}" width="${bW}" height="${Math.max(1,bot-top).toFixed(1)}" rx="1" fill="var(--b2)" opacity="0.45"/>`;
+    }
+
+    /* 3. Full goal — solid payment portion, stacked on savings+expense */
+    if(pk3>0){
+      const bot=dy2(sv+pk);
+      const top=dy2(sv+pk+pk3);
+      g+=`<rect x="${x}" y="${top.toFixed(1)}" width="${bW}" height="${Math.max(1,bot-top).toFixed(1)}" rx="1" fill="var(--b3)" opacity="0.45"/>`;
+    }
+
+    /* 4. Opaque expense — ghost accrual above payment, stacked on full layers */
+    if(ev_ghost>0){
+      const base=sv+pk+pk3;
+      const bot=dy2(base);
+      const top=dy2(base+ev_ghost);
+      g+=`<rect x="${x}" y="${top.toFixed(1)}" width="${bW}" height="${Math.max(1,bot-top).toFixed(1)}" rx="1" fill="var(--b2)" opacity="0.15"/>`;
+    } else if(!pk&&ev>0){
+      /* regular day, no payment: all of ev is ghost, base is sv */
+      const bot=dy2(sv);
+      const top=dy2(sv+ev);
+      g+=`<rect x="${x}" y="${top.toFixed(1)}" width="${bW}" height="${Math.max(1,bot-top).toFixed(1)}" rx="1" fill="var(--b2)" opacity="0.15"/>`;
+    }
+
+    /* 5. Opaque goal — ghost accrual above payment */
+    if(gv_ghost>0){
+      const base=sv+pk+pk3+ev_ghost; /* = sv+pk3+ev */
+      const bot=dy2(base);
+      const top=dy2(base+gv_ghost);
+      g+=`<rect x="${x}" y="${top.toFixed(1)}" width="${bW}" height="${Math.max(1,bot-top).toFixed(1)}" rx="1" fill="var(--b3)" opacity="0.15"/>`;
+    } else if(!pk3&&gv>0){
+      /* regular day, no payment: all of gv is ghost, base is sv+ev */
+      const bot=dy2(sv+ev);
+      const top=dy2(sv+ev+gv);
+      g+=`<rect x="${x}" y="${top.toFixed(1)}" width="${bW}" height="${Math.max(1,bot-top).toFixed(1)}" rx="1" fill="var(--b3)" opacity="0.15"/>`;
+    }
+
+    /* expense dot — at top of full expense bar */
     if(dueDots[D]){
-      const col2=D<=3?'#D97706':D<=10?'#D97706':'#2563EB';
-      g+=`<circle cx="${(+x+barW/2).toFixed(1)}" cy="${(+bY-6).toFixed(1)}" r="3.5" fill="${col2}" stroke="white" stroke-width="1.5"/>`;
-      if(+bY>tm+16){
+      const dotY=dy2(sv+pk).toFixed(1);
+      g+=`<circle cx="${(+x+barW/2).toFixed(1)}" cy="${(+dotY-6).toFixed(1)}" r="3.5" fill="var(--b2)" stroke="white" stroke-width="1.5"/>`;
+      if(+dotY>tm+16){
         const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
-        g+=`<text x="${(+x+barW/2).toFixed(1)}" y="${(+bY-13).toFixed(1)}" text-anchor="${ank}" fill="${col2}" font-size="14" font-weight="700" font-family="Inter,sans-serif">${fmt(dueDots[D])}</text>`;
+        const _lbl=fmt(dueDots[D]),_cx=+x+barW/2,_y=+dotY-13;
+        if(_fits(_cx,_y,_lbl,11,ank)){g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b2)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;}
+      }
+    }
+
+    /* goal dot — at top of full goal bar */
+    if(goalDots[D]){
+      const dotY=dy2(sv+pk+pk3).toFixed(1);
+      const gx=(+x+barW/2+(dueDots[D]?5:0)).toFixed(1);
+      g+=`<circle cx="${gx}" cy="${(+dotY-6).toFixed(1)}" r="3.5" fill="var(--b3)" stroke="white" stroke-width="1.5"/>`;
+      if(+dotY>tm+16){
+        const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
+        const _lbl=fmt(goalDots[D]),_cx=+x+barW/2,_y=+dotY-13;
+        if(_fits(_cx,_y,_lbl,11,ank)){g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b3)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;}
+      }
+    }
+
+    /* savings dot — at top of savings bar */
+    if(savingsDots[D]){
+      const bot=dy2(0);
+      const svTop=(Math.min(dy2(sv||0),bot-5)).toFixed(1);
+      g+=`<circle cx="${(+x+barW/2).toFixed(1)}" cy="${(+svTop-6).toFixed(1)}" r="3.5" fill="var(--b1)" stroke="white" stroke-width="1.5"/>`;
+      if(+svTop>tm+16){
+        const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
+        const _lbl=fmt(savingsDots[D]),_cx=+x+barW/2,_y=+svTop-13;
+        if(_fits(_cx,_y,_lbl,11,ank)){g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b1)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;}
       }
     }
   }
 
-  /* x axis */
-  g+=`<line x1="${lm}" y1="${(H-bm).toFixed(1)}" x2="${W-rm}" y2="${(H-bm).toFixed(1)}" stroke="#E2E8F0" stroke-width="1"/>`;
-  for(let D=0;D<=WIN;D+=5){
+  /* x axis — baseline line removed */
+  /* today marker when panned away */
+  const _realTodayD=-panOffset;
+  if(_realTodayD>0&&_realTodayD<=WIN){
+    const _tx=(bx2(_realTodayD)+barW/2).toFixed(1);
+    g+=`<line x1="${_tx}" y1="${tm}" x2="${_tx}" y2="${H-bm}" stroke="#22C55E" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>`;
+    g+=`<text x="${_tx}" y="${(tm-6).toFixed(1)}" text-anchor="middle" font-size="9" fill="#22C55E" font-family="Inter,sans-serif">TODAY</text>`;
+  }
+  for(let D=0;D<=WIN;D+=7){
     const d=new Date(tod);d.setDate(tod.getDate()+D);
-    const lbl=D===0?'Today':MN[d.getMonth()]+' '+d.getDate();
+    const lbl=(D===0&&panOffset===0)?'Today':MN[d.getMonth()]+' '+d.getDate();
     g+=`<text x="${(bx2(D)+barW/2).toFixed(1)}" y="${(H-bm+32).toFixed(1)}" text-anchor="middle" fill="#94A3B8" font-size="14" font-family="Inter,sans-serif">${lbl}</text>`;
   }
-
+  const _btn=document.getElementById('g2-today-btn');
+  if(_btn)_btn.style.display=panOffset===0?'none':'inline-block';
   svg.innerHTML=g;
+  document.querySelectorAll('#il3 .irow[data-goal-total]').forEach(row=>{
+    const bar=row.querySelector('.row-bar-fill');if(!bar)return;
+    const goalTotal=parseFloat(row.dataset.goalTotal||0);
+    const paid=calcGoalPaid(row,tod);
+    const pct=goalTotal>0?Math.min(paid/goalTotal,1):0;
+    bar.style.setProperty('--fill',(pct*100).toFixed(1)+'%');
+  });
 }
 
 /* ── RECURRING + DATE PICKER ── */
@@ -969,9 +1290,30 @@ function openRecPopup(btn){
       '<button class="rec-opt" data-p="weekly">↻ Weekly (7d)</button>'+
       '<button class="rec-opt" data-p="biweekly">↻ Bi-weekly (14d)</button>'+
       '<button class="rec-opt" data-p="monthly">↻ Monthly (30d)</button>'+
-      '<button class="rec-opt rec-opt-off" data-p="">— Off</button>';
+      '<button class="rec-opt rec-opt-off" data-p="">— Off</button>'+
+      '<div style="border-top:1px solid var(--border);margin:4px 0 2px;"></div>'+
+      '<div style="display:flex;align-items:center;gap:4px;padding:3px 10px 7px;">'+
+        '<span style="font-size:11px;color:var(--muted);white-space:nowrap;flex-shrink:0;">Ends on:</span>'+
+        '<input id="rec-end-inp" type="date" style="font-size:11px;font-family:inherit;border:1px solid var(--border);border-radius:4px;padding:2px 5px;background:var(--bg);color:var(--text);flex:1;min-width:0;outline:none;">'+
+        '<button id="rec-end-clr" title="Clear" style="font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0;">×</button>'+
+      '</div>';
     document.body.appendChild(pop);
+    document.getElementById('rec-end-inp').addEventListener('change',e=>{
+      e.stopPropagation();
+      const row=_recPopupTarget&&_recPopupTarget.closest('.irow');
+      if(row){if(e.target.value)row.dataset.end=e.target.value;else delete row.dataset.end;computeAll();saveLS();}
+    });
+    document.getElementById('rec-end-inp').addEventListener('click',e=>e.stopPropagation());
+    document.getElementById('rec-end-clr').addEventListener('click',e=>{
+      e.stopPropagation();
+      const inp=document.getElementById('rec-end-inp');inp.value='';
+      const row=_recPopupTarget&&_recPopupTarget.closest('.irow');
+      if(row){delete row.dataset.end;computeAll();saveLS();}
+    });
   }
+  const row=btn.closest('.irow');
+  const endInp=document.getElementById('rec-end-inp');
+  if(endInp)endInp.value=(row&&row.dataset.end)||'';
   const r=btn.getBoundingClientRect();
   pop.style.top=(r.bottom+4)+'px';pop.style.left=r.left+'px';
   pop.classList.add('open');
@@ -981,6 +1323,70 @@ function closeRecPopup(){
   const pop=document.getElementById('rec-popup');
   if(pop)pop.classList.remove('open');
   _recPopupTarget=null;
+}
+let _goalRow=null;
+function openGoalPopup(btn){
+  _goalRow=btn.closest('.irow');
+  const popup=document.getElementById('goal-popup');if(!popup)return;
+  _initGoalListeners();
+  const r=btn.getBoundingClientRect();
+  popup.style.top=Math.min(r.bottom+4,window.innerHeight-240)+'px';
+  popup.style.left=Math.max(4,r.left-180)+'px';
+  document.getElementById('gp-total').value=_goalRow.dataset.goalTotal||'';
+  document.getElementById('gp-start').value=_goalRow.dataset.goalStart||new Date().toISOString().slice(0,10);
+  const _dfl1yr=new Date();_dfl1yr.setFullYear(_dfl1yr.getFullYear()+1);
+  document.getElementById('gp-deadline').value=_goalRow.dataset.goalDeadline||_dfl1yr.toISOString().slice(0,10);
+  const freq=_goalRow.dataset.goalFreq||'monthly';
+  document.querySelectorAll('#goal-popup .gp-freq button').forEach(b=>{b.classList.toggle('active',b.dataset.f===freq);});
+  updateGoalCalc();
+  popup.style.display='block';
+  setTimeout(()=>document.addEventListener('mousedown',_goalPopupOutside),0);
+}
+function _goalPopupOutside(e){
+  const popup=document.getElementById('goal-popup');
+  if(popup&&!popup.contains(e.target)&&(!_goalRow||!_goalRow.contains(e.target))){closeGoalPopup();}
+}
+function closeGoalPopup(){
+  const popup=document.getElementById('goal-popup');
+  if(popup)popup.style.display='none';
+  document.removeEventListener('mousedown',_goalPopupOutside);
+  _goalRow=null;
+}
+function updateGoalCalc(){
+  if(!_goalRow)return;
+  const total=parseFloat(document.getElementById('gp-total').value||0);
+  const startVal=document.getElementById('gp-start').value;
+  const deadlineVal=document.getElementById('gp-deadline').value;
+  const activeBtn=document.querySelector('#goal-popup .gp-freq button.active');
+  const freq=activeBtn?activeBtn.dataset.f:'monthly';
+  if(total>0)_goalRow.dataset.goalTotal=String(total);else delete _goalRow.dataset.goalTotal;
+  if(startVal)_goalRow.dataset.goalStart=startVal;else delete _goalRow.dataset.goalStart;
+  if(deadlineVal)_goalRow.dataset.goalDeadline=deadlineVal;else delete _goalRow.dataset.goalDeadline;
+  _goalRow.dataset.goalFreq=freq;
+  const btn=_goalRow.querySelector('.igoal-btn');
+  if(btn)btn.classList.toggle('igoal-on',!!(total>0&&startVal&&deadlineVal));
+  const contrib=calcGoalContribution(_goalRow);
+  const calcEl=document.getElementById('gp-calc');
+  if(calcEl){
+    if(contrib>0&&startVal&&deadlineVal){
+      const start=new Date(startVal+'T00:00:00'),deadline=new Date(deadlineVal+'T00:00:00');
+      const period=freq==='weekly'?7:freq==='biweekly'?14:30;
+      let count=0,d=new Date(start);
+      if(period===30){while(d<=deadline){count++;d=new Date(d.getFullYear(),d.getMonth()+1,d.getDate());}}
+      else{while(d<=deadline){count++;d.setDate(d.getDate()+period);}}
+      const freqLabel=freq==='weekly'?'/wk':freq==='biweekly'?'/2wk':'/mo';
+      calcEl.textContent='→ '+fmt(contrib)+freqLabel+' × '+count+' payments';
+    } else {calcEl.textContent='—';}
+  }
+  computeAll();saveLS();
+}
+function parseEndDate(row){
+  if(!row||!row.dataset.end)return null;
+  const d=new Date(row.dataset.end+'T00:00:00');
+  return isNaN(d.getTime())?null:d;
+}
+function updateEndBadges(){
+  document.querySelectorAll('.iend-badge').forEach(b=>b.remove());
 }
 
 function initFlatpickr(dateEl){
@@ -1027,22 +1433,88 @@ function initIncomeDatePicker(dateEl){
   dateEl._fp=fp;
 }
 function initAllDatePickers(){
-  document.querySelectorAll('.irow:not(.inc-entry) .idate').forEach(initFlatpickr);
+  document.querySelectorAll('.irow:not(.inc-entry):not([data-goal-total]) .idate').forEach(initFlatpickr);
   document.querySelectorAll('.inc-entry .idate-lead').forEach(initIncomeDatePicker);
 }
 
 function initRecurringUI(){
+  const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const thisYr=new Date().getFullYear();
   document.querySelectorAll('.irow').forEach(row=>{
+    if(row.dataset.goalTotal)return;
     let btn=row.querySelector('.irec');
     if(!btn){
       const delBtn=row.querySelector('.idel');if(!delBtn)return;
       btn=document.createElement('button');
       row.insertBefore(btn,delBtn);
     }
-    btn.className='irec'+(row.dataset.recurring?' irec-on':'');
+    const endD=parseEndDate(row);
+    btn.className='irec'+(row.dataset.recurring?' irec-on':'')+(endD?' irec-end':'');
     btn.textContent=getRecLabel(row.dataset.recurring);
-    btn.title=row.dataset.recurring?row.dataset.recurring+' recurring — click to change':'Set recurring';
+    if(endD){
+      const lbl=MN[endD.getMonth()]+' '+endD.getDate()+(endD.getFullYear()!==thisYr?" '"+String(endD.getFullYear()).slice(2):'');
+      btn.title=(row.dataset.recurring||'recurring')+' — ends '+lbl;
+    } else {
+      btn.title=row.dataset.recurring?row.dataset.recurring+' recurring':'';
+    }
+    const setBtn=row.querySelector('.iset-btn');
+    if(setBtn)setBtn.classList.toggle('iset-on',!!(row.dataset.itemStart||row.dataset.end));
   });
+}
+
+/* ── ITEM SETTINGS POPUP ── */
+let _settingsRow=null;
+function openSettingsPopup(btn){
+  _initSettingsListeners();
+  _settingsRow=btn.closest('.irow');
+  const popup=document.getElementById('settings-popup');if(!popup)return;
+  const freq=_settingsRow.dataset.recurring||'';
+  document.querySelectorAll('#settings-popup .gp-freq button').forEach(b=>{b.classList.toggle('active',b.dataset.f===freq);});
+  document.getElementById('sp-start').value=_settingsRow.dataset.itemStart||'';
+  document.getElementById('sp-end').value=_settingsRow.dataset.end||'';
+  const r=btn.getBoundingClientRect();
+  popup.style.top=Math.min(r.bottom+4,window.innerHeight-180)+'px';
+  popup.style.left=Math.max(4,r.left-180)+'px';
+  popup.style.display='block';
+  setTimeout(()=>document.addEventListener('mousedown',_settingsPopupOutside),0);
+}
+function _settingsPopupOutside(e){
+  const popup=document.getElementById('settings-popup');
+  if(popup&&!popup.contains(e.target)&&(!_settingsRow||!_settingsRow.contains(e.target))){closeSettingsPopup();}
+}
+function closeSettingsPopup(){
+  const popup=document.getElementById('settings-popup');if(popup)popup.style.display='none';
+  document.removeEventListener('mousedown',_settingsPopupOutside);
+  if(_settingsRow){const sb=_settingsRow.querySelector('.iset-btn');if(sb)sb.classList.toggle('iset-on',!!((_settingsRow.dataset.itemStart)||(_settingsRow.dataset.end)));}
+  _settingsRow=null;
+}
+let _settingsListenersInitd=false;
+function _initSettingsListeners(){
+  if(_settingsListenersInitd)return;_settingsListenersInitd=true;
+  document.querySelectorAll('#settings-popup .gp-freq button').forEach(fbtn=>{
+    fbtn.addEventListener('click',()=>{
+      document.querySelectorAll('#settings-popup .gp-freq button').forEach(b=>b.classList.remove('active'));
+      fbtn.classList.add('active');
+      if(!_settingsRow)return;
+      const f=fbtn.dataset.f;
+      if(f)_settingsRow.dataset.recurring=f;else delete _settingsRow.dataset.recurring;
+      computeAll();saveLS();
+    });
+  });
+  const ss=document.getElementById('sp-start'),se=document.getElementById('sp-end'),sec=document.getElementById('sp-end-clr');
+  if(ss)ss.addEventListener('change',e=>{
+    if(!_settingsRow)return;
+    if(e.target.value){
+      _settingsRow.dataset.itemStart=e.target.value;
+      const _sd=new Date(e.target.value+'T00:00:00');
+      const _MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const dateEl=_settingsRow.querySelector('.idate');
+      if(dateEl)dateEl.textContent=_MN[_sd.getMonth()]+' '+_sd.getDate();
+    } else {delete _settingsRow.dataset.itemStart;}
+    computeAll();saveLS();
+  });
+  if(se)se.addEventListener('change',e=>{if(!_settingsRow)return;if(e.target.value)_settingsRow.dataset.end=e.target.value;else delete _settingsRow.dataset.end;computeAll();saveLS();});
+  if(sec)sec.addEventListener('click',e=>{e.stopPropagation();document.getElementById('sp-end').value='';if(!_settingsRow)return;delete _settingsRow.dataset.end;computeAll();saveLS();});
 }
 
 function autoAdvanceDueDates(){
@@ -1131,7 +1603,7 @@ function updateIncomeStats(){
   const incLogged=getMonthlyIncomeTotal();
   const dueMap=getDueMap(yr,mo);
   let totalOblig=0;
-  document.querySelectorAll('.iamt[data-b]').forEach(el=>{totalOblig+=parseAmt(el.textContent);});
+  Object.values(dueMap).forEach(v=>{totalOblig+=v;});
   const surplus=incLogged-totalOblig;
   const hInc=document.getElementById('hd-inc');if(hInc)hInc.textContent=fmt(incLogged);
   const him=document.getElementById('hd-inc-month');if(him)him.textContent=MN[mo];
@@ -1145,7 +1617,7 @@ function updateIncomeStats(){
 
 /* ── ROW FILL BARS ── */
 function updateRowBars(){
-  let avail=getMonthlyIncomeTotal();
+  let avail=getWindow31IncomeTotal();
   [1,2,3].forEach(b=>{
     const list=document.getElementById('il'+b);if(!list)return;
     const rows=Array.from(list.querySelectorAll('.irow:not(.inc-entry)'));
@@ -1156,6 +1628,13 @@ function updateRowBars(){
     });
     rows.forEach(row=>{
       const bar=row.querySelector('.row-bar-fill');if(!bar)return;
+      if(row.dataset.goalTotal){
+        const goalTotal=parseFloat(row.dataset.goalTotal||0);
+        const paid=calcGoalPaid(row);
+        const pct=goalTotal>0?Math.min(paid/goalTotal,1):0;
+        bar.style.setProperty('--fill',(pct*100).toFixed(1)+'%');
+        return;
+      }
       const cost=parseAmt((row.querySelector('.iamt')||{}).textContent||'0');
       const allocated=Math.min(avail,cost);
       const pct=cost>0?allocated/cost:0;
@@ -1165,19 +1644,119 @@ function updateRowBars(){
   });
 }
 
+/* ── GOAL HELPERS ── */
+function calcGoalContribution(row){
+  const total=parseFloat(row.dataset.goalTotal||0);
+  const freq=row.dataset.goalFreq||'monthly';
+  const start=row.dataset.goalStart?new Date(row.dataset.goalStart+'T00:00:00'):null;
+  const deadline=row.dataset.goalDeadline?new Date(row.dataset.goalDeadline+'T00:00:00'):null;
+  if(!total||!start||!deadline||deadline<=start)return 0;
+  const period=freq==='weekly'?7:freq==='biweekly'?14:30;
+  let count=0,d=new Date(start);
+  if(period===30){while(d<=deadline){count++;d=new Date(d.getFullYear(),d.getMonth()+1,d.getDate());}}
+  else{while(d<=deadline){count++;d.setDate(d.getDate()+period);}}
+  return count>0?total/count:0;
+}
+function calcGoalPaid(row,asOf){
+  const freq=row.dataset.goalFreq||'monthly';
+  const start=row.dataset.goalStart?new Date(row.dataset.goalStart+'T00:00:00'):null;
+  if(!start)return 0;
+  const tod=asOf||(()=>{const d=new Date();d.setHours(0,0,0,0);return d;})();
+  if(start>tod)return 0;
+  const perPeriod=calcGoalContribution(row);
+  if(perPeriod<=0)return 0;
+  const period=freq==='weekly'?7:freq==='biweekly'?14:30;
+  const adv=dt=>period===30?new Date(dt.getFullYear(),dt.getMonth()+1,dt.getDate()):(()=>{const n=new Date(dt);n.setDate(n.getDate()+period);return n;})();
+  let count=0,d=new Date(start),next=adv(d);
+  while(next<=tod){count++;d=next;next=adv(d);}
+  const total=parseFloat(row.dataset.goalTotal||0);
+  return Math.min(perPeriod*count,total);
+}
+function getGoalMonthlyContrib(row){
+  const freq=row.dataset.goalFreq||'monthly';
+  const pp=calcGoalContribution(row);
+  if(freq==='weekly')return pp*52/12;
+  if(freq==='biweekly')return pp*26/12;
+  return pp;
+}
+function updateGoalRowDisplay(row){
+  const deadline=row.dataset.goalDeadline?new Date(row.dataset.goalDeadline+'T00:00:00'):null;
+  const idateEl=row.querySelector('.idate');
+  const ibadgeEl=row.querySelector('.ibadge');
+  if(!idateEl)return;
+  if(deadline){
+    const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const thisYr=new Date().getFullYear();
+    const yr=deadline.getFullYear();
+    idateEl.textContent=MN[deadline.getMonth()]+(yr!==thisYr?" '"+String(yr).slice(2):'');
+    if(ibadgeEl){
+      const tod=new Date();tod.setHours(0,0,0,0);
+      const moLeft=Math.max(0,Math.round((deadline-tod)/86400000/30.5));
+      ibadgeEl.textContent=moLeft>0?moLeft+'mo':'done';
+      ibadgeEl.className='ibadge '+(moLeft<=1?'ib-warn':'ib-fine');
+    }
+  } else {
+    idateEl.textContent='No deadline';
+    if(ibadgeEl){ibadgeEl.textContent='';ibadgeEl.className='ibadge';}
+  }
+}
+function updateGoalSummary(){
+  const el=document.getElementById('il3-summary');if(!el)return;
+  const tod=new Date();tod.setHours(0,0,0,0);
+  let n=0,activeMonthly=0,totalAmt=0,totalPaid=0;
+  document.querySelectorAll('#il3 .irow[data-goal-total]').forEach(row=>{
+    n++;
+    const start=row.dataset.goalStart?new Date(row.dataset.goalStart+'T00:00:00'):null;
+    const goalTotal=parseFloat(row.dataset.goalTotal||0);
+    totalAmt+=goalTotal;totalPaid+=calcGoalPaid(row);
+    activeMonthly+=getGoalMonthlyContrib(row);
+  });
+  if(n===0){el.textContent='';return;}
+  const pct=totalAmt>0?Math.round(totalPaid/totalAmt*100):0;
+  el.textContent=n+' goal'+(n!==1?'s':'')+' · $'+Math.round(activeMonthly)+'/mo planned · '+pct+'% funded';
+}
+
 /* ── COMPUTE ALL ── */
 function computeAll(){
   autoAdvanceDueDates();
+  // Auto-update iamt for goal rows and their display
+  document.querySelectorAll('#il3 .irow[data-goal-total]').forEach(row=>{
+    const contrib=calcGoalContribution(row);
+    const amtEl=row.querySelector('.iamt[data-b="3"]');
+    if(amtEl){const gt=parseFloat(row.dataset.goalTotal||0);amtEl.textContent=contrib>0?fmt(contrib):gt>0?fmt(gt):'$0';}
+    updateGoalRowDisplay(row);
+    const btn=row.querySelector('.igoal-btn');
+    if(btn)btn.classList.toggle('igoal-on',!!(row.dataset.goalTotal&&row.dataset.goalStart&&row.dataset.goalDeadline));
+  });
   const totals=[0,0,0];
   document.querySelectorAll('.iamt[data-b]').forEach(el=>{
+    const row=el.closest('.irow');
+    if(row&&row.dataset.goalTotal&&el.dataset.b==='3')return;
     const b=parseInt(el.dataset.b,10)-1;
     if(b>=0&&b<3)totals[b]+=parseAmt(el.textContent);
   });
+  document.querySelectorAll('#il3 .irow[data-goal-total]').forEach(row=>{
+    totals[2]+=getGoalMonthlyContrib(row);
+  });
   const targets=totals;
+  /* monthly expenses only for bucket fill (calendar-month window) */
+  const _bTod=new Date();_bTod.setHours(0,0,0,0);
+  let _monthlyExp=0;
+  document.querySelectorAll('#il2 .irow:not(.inc-entry)').forEach(row=>{
+    const amtEl=row.querySelector('.iamt[data-b="2"]');if(!amtEl)return;
+    const amt=parseAmt(amtEl.textContent);if(!amt)return;
+    if(row.dataset.end){const ed=new Date(row.dataset.end+'T00:00:00');if(ed<=_bTod)return;}
+    if(row.dataset.itemStart){const sd=new Date(row.dataset.itemStart+'T00:00:00');if(_bTod<sd)return;}
+    const rec=row.dataset.recurring;
+    if(rec==='weekly')_monthlyExp+=amt*52/12;
+    else if(rec==='biweekly')_monthlyExp+=amt*26/12;
+    else if(rec)_monthlyExp+=amt;
+    else{const dEl=row.querySelector('.idate');if(dEl){const d=parseDueDate(dEl.textContent);if(d){const dy=daysUntil(d);if(dy>=0&&dy<=31)_monthlyExp+=amt;}}}
+  });
   /* waterfall: allocate received income in priority order */
-  let _avail=getMonthlyIncomeTotal();
+  let _avail=getNormMonthlyIncomeTotal();
   const _b1Alloc=Math.min(_avail,targets[0]);const _b1Pct=targets[0]>0?_b1Alloc/targets[0]:0;_avail-=_b1Alloc;
-  const _b2Tot=totals[1];const _b2Alloc=Math.min(_avail,_b2Tot);const _b2Pct=_b2Tot>0?_b2Alloc/_b2Tot:0;_avail-=_b2Alloc;
+  const _b2Tot=_monthlyExp;const _b2Alloc=Math.min(_avail,_b2Tot);const _b2Pct=_b2Tot>0?_b2Alloc/_b2Tot:0;_avail-=_b2Alloc;
   const _b3Alloc=Math.min(_avail,targets[2]);const _b3Pct=targets[2]>0?_b3Alloc/targets[2]:0;
   updateBucket(1,_b1Alloc,targets[0],_b1Pct);
   updateBucket(2,_b2Alloc,_b2Tot,_b2Pct);
@@ -1185,12 +1764,15 @@ function computeAll(){
   updateCascade(1,_b1Pct,_b1Alloc,targets[0]);
   updateCascade(2,_b2Pct,_b2Alloc,_b2Tot);
   updateBadges();
+  updateEndBadges();
+  updateGoalSummary();
   updateRowBars();
   updateIncomeStats();
   drawGraph();
+  _axisFromComputeAll=true;
   drawGraph2();
   initAllDatePickers();
-  initDragHandles();
+  sortExpenseRows();initDragHandles();
   initRecurringUI();
   const _il2=document.getElementById('il2');const _il2more=document.getElementById('il2-more');
   if(_il2&&_il2more){const _cnt=_il2.querySelectorAll('.irow').length;const _over=_cnt-30;_il2more.textContent=_over>0?'+ '+_over+' more item'+(+_over===1?'':'s')+' not shown in print':''}
@@ -1209,18 +1791,33 @@ function addItem(b){
   const list=document.getElementById('il'+b);
 
   const row=document.createElement('div');row.className='irow';
-  row.innerHTML='<span class="iname ph" contenteditable="true" data-ph="New item">New item</span>'+
-    '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
-    '<span class="iamt" contenteditable="true" data-b="'+b+'">$0</span>'+
-    '<span class="idue"><span class="idate">'+defaultDueStr()+'</span>'+
-    '<span class="ibadge ib-fine">21d</span></span>'+
-    '<button class="irec" title="Set monthly recurring">↻</button>'+
-    '<button class="idel" onclick="del(this)">×</button>';
-  list.prepend(row);
-  const dateEl=row.querySelector('.idate');
-  if(dateEl&&window.flatpickr)initFlatpickr(dateEl);
-  computeAll();
-  setTimeout(()=>{const _n=row.querySelector('.iname');if(!_n)return;_n.focus();const _s=window.getSelection(),_r=document.createRange();_r.selectNodeContents(_n);_s.removeAllRanges();_s.addRange(_r);},50);
+  if(b===3){
+    row.dataset.goalFreq='monthly';
+    row.innerHTML='<span class="iname ph" contenteditable="true" data-ph="New goal">New goal</span>'+
+      '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
+      '<span class="iamt" contenteditable="false" data-b="3" style="pointer-events:none">$0</span>'+
+      '<span class="idue"><span class="idate">No deadline</span>'+
+      '<span class="ibadge ib-fine"></span></span>'+
+      '<button class="igoal-btn igoal-on" title="Goal settings" onclick="openGoalPopup(this)">⚙</button>'+
+      '<button class="idel" onclick="del(this)">×</button>';
+    list.prepend(row);
+    computeAll();
+    setTimeout(()=>{const btn=row.querySelector('.igoal-btn');if(btn)openGoalPopup(btn);},50);
+  } else {
+    row.innerHTML='<span class="iname ph" contenteditable="true" data-ph="New item">New item</span>'+
+      '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
+      '<span class="iamt" contenteditable="true" data-b="'+b+'">$0</span>'+
+      '<span class="idue"><span class="idate">'+defaultDueStr()+'</span>'+
+      '<span class="ibadge ib-fine">21d</span></span>'+
+      '<button class="irec" title="Recurring">↻</button>'+
+      '<button class="iset-btn" title="Item settings" onclick="openSettingsPopup(this)">⚙</button>'+
+      '<button class="idel" onclick="del(this)">×</button>';
+    list.prepend(row);
+    const dateEl=row.querySelector('.idate');
+    if(dateEl&&window.flatpickr)initFlatpickr(dateEl);
+    computeAll();
+    setTimeout(()=>{const _n=row.querySelector('.iname');if(!_n)return;_n.focus();const _s=window.getSelection(),_r=document.createRange();_r.selectNodeContents(_n);_s.removeAllRanges();_s.addRange(_r);},50);
+  }
 }
 function addIncome(){
   const list=document.getElementById('income-list');
@@ -1284,14 +1881,43 @@ document.addEventListener('input',e=>{
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&e.target.isContentEditable){e.preventDefault();e.target.blur();}
 });
+/* goal popup listeners — lazy init so DOM exists when called */
+let _goalListenersInitd=false;
+function _initGoalListeners(){
+  if(_goalListenersInitd)return;_goalListenersInitd=true;
+  const t=document.getElementById('gp-total'),s=document.getElementById('gp-start'),d=document.getElementById('gp-deadline');
+  if(t)t.addEventListener('input',updateGoalCalc);
+  if(s)s.addEventListener('change',updateGoalCalc);
+  if(d)d.addEventListener('change',updateGoalCalc);
+  document.querySelectorAll('#goal-popup .gp-freq button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('#goal-popup .gp-freq button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      updateGoalCalc();
+    });
+  });
+}
 
 window.addEventListener('beforeprint',function(){
   const s=document.getElementById('urgency-chart');
   const h=document.getElementById('print-graph-clone');
   if(s&&h){
-    /* rotate 90° CW: viewBox 0 0 480 836; transform maps (x,y)→(480-y,x)
-       Explicit height/width in mm so sizing doesn't depend on CSS height:100% */
-    h.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 836" style="display:block;margin:0 auto;height:240mm;width:138mm"><rect width="480" height="836" fill="white"/><g transform="translate(480,0) rotate(90)">'+s.innerHTML+'</g></svg>';
+    const mo=(document.getElementById('print-graph-month')||{}).textContent||'';
+    const OFF=58;const WP=480+OFF;
+    const hdr=
+      '<text x="20" y="22" font-size="15" font-weight="700" font-family="Inter,sans-serif" fill="#111">Finance Tracker — '+mo+'</text>'+
+      '<line x1="0" y1="30" x2="836" y2="30" stroke="#ccc" stroke-width="1"/>'+
+      '<rect x="20" y="37" width="15" height="9" rx="2" fill="#2563EB" opacity="0.45"/>'+
+      '<text x="41" y="47" font-size="10" font-family="Inter,sans-serif" fill="#444">Amount due on that day</text>'+
+      '<rect x="210" y="37" width="15" height="9" rx="2" fill="#2563EB" opacity="0.15"/>'+
+      '<text x="231" y="47" font-size="10" font-family="Inter,sans-serif" fill="#444">Accumulating (not yet due)</text>'+
+      '<rect x="420" y="41" width="18" height="3" rx="1" fill="#B45309"/>'+
+      '<text x="444" y="47" font-size="10" font-family="Inter,sans-serif" fill="#444">Monthly income total</text>'+
+      '<circle cx="610" cy="42" r="4" fill="#2563EB" stroke="white" stroke-width="1.5"/>'+
+      '<text x="621" y="47" font-size="10" font-family="Inter,sans-serif" fill="#444">Due date</text>'+
+      '<circle cx="690" cy="42" r="4" fill="#F59E0B" stroke="white" stroke-width="1.5"/>'+
+      '<text x="701" y="47" font-size="10" font-family="Inter,sans-serif" fill="#444">Goal payment</text>';
+    h.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+WP+' 836" style="display:block;margin:0 auto;height:240mm;width:'+Math.round(138*WP/480)+'mm"><rect width="'+WP+'" height="836" fill="white"/><g transform="translate('+WP+',0) rotate(90)">'+hdr+'<g transform="translate(0,'+OFF+')">'+s.innerHTML+'</g></g></svg>';
   }
 });
 window.addEventListener('afterprint',function(){
@@ -1307,7 +1933,8 @@ function collectExportData(){
       date:(r.querySelector('.idate-lead')||{}).textContent||'',
       name:(r.querySelector('.iname')||{}).textContent||'',
       amt:(r.querySelector('.iamt')||{}).textContent||'',
-      rec:r.dataset.recurring||''
+      rec:r.dataset.recurring||'',
+      end:r.dataset.end||''
     });
   });
   function collectBucket(id,key){
@@ -1316,7 +1943,13 @@ function collectExportData(){
         name:(r.querySelector('.iname')||{}).textContent||'',
         amt:(r.querySelector('.iamt')||{}).textContent||'',
         due:(r.querySelector('.idate')||{}).textContent||'',
-        rec:r.dataset.recurring||''
+        rec:r.dataset.recurring||'',
+        end:r.dataset.end||'',
+        itemStart:r.dataset.itemStart||'',
+        goalTotal:r.dataset.goalTotal||'',
+        goalStart:r.dataset.goalStart||'',
+        goalDeadline:r.dataset.goalDeadline||'',
+        goalFreq:r.dataset.goalFreq||''
       });
     });
   }
@@ -1389,6 +2022,7 @@ function applyData(data){
       '<button class="irec">↻</button>'+
       '<button class="idel" onclick="del(this)">×</button>';
     if(item.rec)row.dataset.recurring=item.rec;
+    if(item.end)row.dataset.end=item.end;
     list.appendChild(row);
     const dateEl=row.querySelector('.idate-lead');
     if(dateEl&&window.flatpickr)initIncomeDatePicker(dateEl);
@@ -1398,16 +2032,32 @@ function applyData(data){
     (data[key]||[]).forEach(item=>{
       const row=document.createElement('div');row.className='irow';
       if(item.rec)row.dataset.recurring=item.rec;
-      row.innerHTML='<span class="iname" contenteditable="true">'+escHtml(item.name||'New item')+'</span>'+
-        '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
-        '<span class="iamt" contenteditable="true" data-b="'+b+'">'+escHtml(item.amt||'$0')+'</span>'+
-        '<span class="idue"><span class="idate">'+escHtml(item.due||'')+'</span>'+
-        '<span class="ibadge ib-fine">—</span></span>'+
-        '<button class="irec" title="Set monthly recurring">↻</button>'+
-        '<button class="idel" onclick="del(this)">×</button>';
+      if(item.end)row.dataset.end=item.end;
+      if(item.itemStart)row.dataset.itemStart=item.itemStart;
+      if(item.goalTotal)row.dataset.goalTotal=item.goalTotal;
+      if(item.goalStart)row.dataset.goalStart=item.goalStart;
+      if(item.goalDeadline)row.dataset.goalDeadline=item.goalDeadline;
+      if(item.goalFreq)row.dataset.goalFreq=item.goalFreq;
+      if(item.goalTotal){
+        row.innerHTML='<span class="iname" contenteditable="true">'+escHtml(item.name||'New goal')+'</span>'+
+          '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
+          '<span class="iamt" contenteditable="false" data-b="'+b+'" style="pointer-events:none">$0</span>'+
+          '<span class="idue"><span class="idate">No deadline</span><span class="ibadge ib-fine"></span></span>'+
+          '<button class="igoal-btn" title="Goal settings" onclick="openGoalPopup(this)">⚙</button>'+
+          '<button class="idel" onclick="del(this)">×</button>';
+      } else {
+        row.innerHTML='<span class="iname" contenteditable="true">'+escHtml(item.name||'New item')+'</span>'+
+          '<span class="row-bar-wrap"><span class="row-bar-fill"></span></span>'+
+          '<span class="iamt" contenteditable="true" data-b="'+b+'">'+escHtml(item.amt||'$0')+'</span>'+
+          '<span class="idue"><span class="idate">'+escHtml(item.due||'')+'</span>'+
+          '<span class="ibadge ib-fine">—</span></span>'+
+          '<button class="irec" title="Recurring">↻</button>'+
+          '<button class="iset-btn" title="Item settings" onclick="openSettingsPopup(this)">⚙</button>'+
+          '<button class="idel" onclick="del(this)">×</button>';
+        const dateEl=row.querySelector('.idate');
+        if(dateEl&&window.flatpickr)initFlatpickr(dateEl);
+      }
       list.appendChild(row);
-      const dateEl=row.querySelector('.idate');
-      if(dateEl&&window.flatpickr)initFlatpickr(dateEl);
     });
   }
   insertBucket('savings','il1',1);
@@ -1428,10 +2078,41 @@ function loadLS(){
   }catch(e){return false;}
 }
 
+let panOffset=0;
+let _axisMaxSeen=0,_axisMinSeen=0; /* stable Y-axis: accumulate worst-case bounds across pan positions */
+let _axisFromComputeAll=false; /* flag: axis may only update when data changed, never while panning */
 loadLS();
 computeAll();
+(function(){
+  const svg=document.getElementById('urgency-chart');if(!svg)return;
+  let drag=false,sx=0,sp=0;
+  svg.addEventListener('mousedown',e=>{drag=true;sx=e.clientX;sp=panOffset;svg.style.cursor='grabbing';e.preventDefault();});
+  document.addEventListener('mouseup',()=>{if(drag){drag=false;svg.style.cursor='grab';}});
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    const rect=svg.getBoundingClientRect();
+    const scale=rect.width/836;
+    const slotPx=((836-70-15)/(31+1))*scale;
+    const newPan=sp-Math.round((e.clientX-sx)/slotPx);
+    if(newPan!==panOffset){panOffset=newPan;drawGraph2();}
+  });
+})();
 </script>
 
+<div id="goal-popup">
+  <div class="gp-row" style="border-bottom:1px solid var(--border);padding:6px 10px 5px;"><span style="font-size:11px;font-weight:600;color:var(--text2);">Goal Settings</span><button onclick="closeGoalPopup()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted);">×</button></div>
+  <div class="gp-row"><span class="gp-label">Total:</span><input id="gp-total" class="gp-input" type="number" min="0" placeholder="15000"></div>
+  <div class="gp-row"><span class="gp-label">Start:</span><input id="gp-start" class="gp-input" type="date"></div>
+  <div class="gp-row"><span class="gp-label">Deadline:</span><input id="gp-deadline" class="gp-input" type="date"></div>
+  <div class="gp-row"><span class="gp-label">Frequency:</span><div class="gp-freq"><button data-f="weekly">Weekly</button><button data-f="biweekly">Bi-wk</button><button data-f="monthly" class="active">Monthly</button></div></div>
+  <div class="gp-calc" id="gp-calc">—</div>
+</div>
+<div id="settings-popup">
+  <div class="gp-row" style="border-bottom:1px solid var(--border);padding:6px 10px 5px;"><span style="font-size:11px;font-weight:600;color:var(--text2);">Item Settings</span><button onclick="closeSettingsPopup()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted);">×</button></div>
+  <div class="gp-row"><span class="gp-label">Freq:</span><div class="gp-freq"><button data-f="weekly">Weekly</button><button data-f="biweekly">Bi-wk</button><button data-f="monthly">Monthly</button><button data-f="">Off</button></div></div>
+  <div class="gp-row"><span class="gp-label">Starts:</span><input id="sp-start" class="gp-input" type="date"></div>
+  <div class="gp-row" style="padding-bottom:8px;"><span class="gp-label">Ends:</span><input id="sp-end" class="gp-input" type="date"><button id="sp-end-clr" style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted);padding:0 2px;line-height:1;flex-shrink:0;">×</button></div>
+</div>
 <div id="import-modal" onclick="if(event.target===this)closeImport()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
   <div style="background:var(--surface);border-radius:10px;padding:20px;width:min(480px,90vw);display:flex;flex-direction:column;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.2);">
     <div style="display:flex;justify-content:space-between;align-items:center;">
