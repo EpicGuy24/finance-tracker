@@ -1718,8 +1718,8 @@ function calcGoalPaid(row,asOf){
   if(perPeriod<=0)return 0;
   const period=freq==='weekly'?7:freq==='biweekly'?14:30;
   const adv=dt=>period===30?new Date(dt.getFullYear(),dt.getMonth()+1,dt.getDate()):(()=>{const n=new Date(dt);n.setDate(n.getDate()+period);return n;})();
-  let count=0,d=new Date(start),next=adv(d);
-  while(next<=tod){count++;d=next;next=adv(d);}
+  let count=0,d=new Date(start);
+  while(d<=tod){count++;d=adv(d);}
   const total=parseFloat(row.dataset.goalTotal||0);
   return Math.min(perPeriod*count,total);
 }
@@ -1739,10 +1739,22 @@ function updateGoalMeta(row){
 }
 function getGoalMonthlyContrib(row){
   const freq=row.dataset.goalFreq||'monthly';
-  const pp=calcGoalContribution(row);
-  if(freq==='weekly')return pp*52/12;
-  if(freq==='biweekly')return pp*26/12;
-  return pp;
+  const start=row.dataset.goalStart?new Date(row.dataset.goalStart+'T00:00:00'):null;
+  const deadline=row.dataset.goalDeadline?new Date(row.dataset.goalDeadline+'T00:00:00'):null;
+  if(!start)return 0;
+  const contrib=calcGoalContribution(row);if(!contrib)return 0;
+  const tod=new Date();tod.setHours(0,0,0,0);
+  const mo30=new Date(tod);mo30.setDate(mo30.getDate()+30);
+  if(freq==='monthly'){
+    let d=new Date(start);
+    while(d<tod)d=new Date(d.getFullYear(),d.getMonth()+1,d.getDate());
+    return(d<=mo30&&(!deadline||d<=deadline))?contrib:0;
+  }
+  const period=freq==='biweekly'?14:7;
+  let d=new Date(start),tot=0;
+  while(d<tod)d.setDate(d.getDate()+period);
+  while(d<=mo30){if(!deadline||d<=deadline)tot+=contrib;d.setDate(d.getDate()+period);}
+  return tot;
 }
 function updateGoalRowDisplay(row){
   const deadline=row.dataset.goalDeadline?new Date(row.dataset.goalDeadline+'T00:00:00'):null;
