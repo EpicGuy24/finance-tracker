@@ -1744,16 +1744,24 @@ function getGoalMonthlyContrib(row){
   if(!start)return 0;
   const contrib=calcGoalContribution(row);if(!contrib)return 0;
   const tod=new Date();tod.setHours(0,0,0,0);
-  const mo30=new Date(tod);mo30.setDate(mo30.getDate()+30);
+  const WIN=30;
   if(freq==='monthly'){
+    const mo30=new Date(tod);mo30.setDate(mo30.getDate()+WIN);
     let d=new Date(start);
     while(d<tod)d=new Date(d.getFullYear(),d.getMonth()+1,d.getDate());
     return(d<=mo30&&(!deadline||d<=deadline))?contrib:0;
   }
   const period=freq==='biweekly'?14:7;
-  let d=new Date(start),tot=0;
-  while(d<tod)d.setDate(d.getDate()+period);
-  while(d<=mo30){if(!deadline||d<=deadline)tot+=contrib;d.setDate(d.getDate()+period);}
+  let occ=new Date(start);
+  while(occ<tod)occ.setDate(occ.getDate()+period);
+  let dud=Math.round((occ-tod)/86400000);
+  let prev=dud-period;
+  let tot=0;
+  while(prev<WIN){
+    const s=Math.max(prev,0),e=Math.min(dud,WIN);
+    if(e>s){const pd=new Date(tod);pd.setDate(pd.getDate()+dud);if(!deadline||pd<=deadline)tot+=contrib*(e-s)/period;}
+    prev=dud;dud+=period;
+  }
   return tot;
 }
 function updateGoalRowDisplay(row){
