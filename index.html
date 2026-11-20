@@ -1487,7 +1487,7 @@ function initRecurringUI(){
   const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const thisYr=new Date().getFullYear();
   document.querySelectorAll('.irow').forEach(row=>{
-    if(row.dataset.goalTotal)return;
+    if(row.closest('#il3'))return;
     let btn=row.querySelector('.irec');
     if(!btn){
       const delBtn=row.querySelector('.idel');if(!delBtn)return;
