@@ -1230,7 +1230,7 @@ function drawGraph2(){
       if(+dotY>tm+16){
         const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
         const _lbl=fmt(dueDots[D]),_cx=+x+barW/2,_y=+dotY-13;
-        if(_fits(_cx,_y,_lbl,11,ank)){g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b2)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;}
+        g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b2)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;_fits(_cx,_y,_lbl,11,ank);
       }
     }
 
@@ -1242,7 +1242,7 @@ function drawGraph2(){
       if(+dotY>tm+16){
         const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
         const _lbl=fmt(goalDots[D]),_cx=+x+barW/2,_y=+dotY-13;
-        if(_fits(_cx,_y,_lbl,11,ank)){g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b3)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;}
+        g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b3)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;_fits(_cx,_y,_lbl,11,ank);
       }
     }
 
@@ -1254,7 +1254,7 @@ function drawGraph2(){
       if(+svTop>tm+16){
         const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
         const _lbl=fmt(savingsDots[D]),_cx=+x+barW/2,_y=+svTop-13;
-        if(_fits(_cx,_y,_lbl,11,ank)){g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b1)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;}
+        g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b1)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;_fits(_cx,_y,_lbl,11,ank);
       }
     }
   }
