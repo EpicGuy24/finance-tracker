@@ -1769,14 +1769,18 @@ function updateGoalRowDisplay(row){
 function updateGoalSummary(){
   const el=document.getElementById('il3-summary');if(!el)return;
   const tod=new Date();tod.setHours(0,0,0,0);
-  let n=0,activeMonthly=0,totalAmt=0,totalPaid=0;
+  let n=0,activeMonthly=0,totalAmt=0,totalPaid=0,nextRow=null,nextStart=null;
   document.querySelectorAll('#il3 .irow[data-goal-total]').forEach(row=>{
     n++;
     const start=row.dataset.goalStart?new Date(row.dataset.goalStart+'T00:00:00'):null;
+    const deadline=row.dataset.goalDeadline?new Date(row.dataset.goalDeadline+'T00:00:00'):null;
     const goalTotal=parseFloat(row.dataset.goalTotal||0);
     totalAmt+=goalTotal;totalPaid+=calcGoalPaid(row);
-    activeMonthly+=getGoalMonthlyContrib(row);
+    const isActive=start&&start<=tod&&(!deadline||tod<=deadline);
+    if(isActive)activeMonthly+=getGoalMonthlyContrib(row);
+    if(start&&start>tod&&(!nextStart||start<nextStart)){nextStart=start;nextRow=row;}
   });
+  if(activeMonthly===0&&nextRow)activeMonthly=getGoalMonthlyContrib(nextRow);
   if(n===0){el.textContent='';return;}
   const pct=totalAmt>0?Math.round(totalPaid/totalAmt*100):0;
   el.textContent=n+' goal'+(n!==1?'s':'')+' · $'+Math.round(activeMonthly)+'/mo planned · '+pct+'% funded';
