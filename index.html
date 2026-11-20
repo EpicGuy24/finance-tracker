@@ -1122,6 +1122,7 @@ function drawGraph2(){
   }
 
   /* step-up/down orange cash flow line */
+  const incDotData=[];
   {
     const startBal=pastInc-pastDue;
     let curBal=startBal;
@@ -1135,6 +1136,7 @@ function drawGraph2(){
         const ey=dy2(curBal).toFixed(1);
         stepPath+=` H ${ex} V ${ey}`;
         fillPath+=` H ${ex} V ${ey}`;
+        if(incOnDay[D]>0)incDotData.push({D,cx:bx2(D)+barW/2,cy:dy2(curBal),amt:incOnDay[D]});
       }
     }
     stepPath+=` H ${(W-rm).toFixed(1)}`;
@@ -1261,6 +1263,17 @@ function drawGraph2(){
       }
     }
   }
+
+  /* income dots — on orange line at post-income balance */
+  incDotData.forEach(({D,cx,cy,amt})=>{
+    if(cy>tm){
+      const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
+      g+=`<circle cx="${cx.toFixed(1)}" cy="${(cy-6).toFixed(1)}" r="3.5" fill="#22C55E" stroke="white" stroke-width="1.5"/>`;
+      const _lbl=fmt(amt);
+      let _y=cy-13;for(let _i=0;_i<6&&!_fits(cx,_y,_lbl,11,ank);_i++)_y-=14;
+      g+=`<text x="${cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="#22C55E" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;
+    }
+  });
 
   /* x axis — baseline line removed */
   /* today marker when panned away */
