@@ -1680,7 +1680,7 @@ function updateRowBars(){
       const bar=row.querySelector('.row-bar-fill');if(!bar)return;
       if(row.dataset.goalTotal){
         const goalTotal=parseFloat(row.dataset.goalTotal||0);
-        const paid=calcGoalPaid(row);
+        const paid=calcGoalAccrual(row);
         const pct=goalTotal>0?Math.min(paid/goalTotal,1):0;
         bar.style.setProperty('--fill',(pct*100).toFixed(1)+'%');
         updateGoalMeta(row);
@@ -1708,6 +1708,27 @@ function calcGoalContribution(row){
   else{while(d<=deadline){count++;d.setDate(d.getDate()+period);}}
   return count>0?total/count:0;
 }
+function calcGoalAccrual(row){
+  const total=parseFloat(row.dataset.goalTotal||0);if(!total)return 0;
+  const contrib=calcGoalContribution(row);if(!contrib)return 0;
+  const freq=row.dataset.goalFreq||'monthly';
+  const start=row.dataset.goalStart?new Date(row.dataset.goalStart+'T00:00:00'):null;
+  const deadline=row.dataset.goalDeadline?new Date(row.dataset.goalDeadline+'T00:00:00'):null;
+  if(!start)return 0;
+  const tod=new Date();tod.setHours(0,0,0,0);
+  const period=freq==='weekly'?7:freq==='biweekly'?14:30;
+  const adv=dt=>period===30?new Date(dt.getFullYear(),dt.getMonth()+1,dt.getDate()):(()=>{const n=new Date(dt);n.setDate(n.getDate()+period);return n;})();
+  let occ=new Date(start);
+  while(occ<tod)occ=adv(occ);
+  const dud=Math.round((occ-tod)/86400000);
+  const prevDay=dud-period;
+  if(prevDay>=0)return 0;
+  let past=0,d=new Date(start);
+  while(d<tod){if(!deadline||d<=deadline)past+=contrib;d=adv(d);}
+  const elapsed=-prevDay;
+  const partial=(!deadline||adv(new Date(tod.getTime()-elapsed*86400000))<=deadline)?contrib*elapsed/period:0;
+  return Math.min(past+partial,total);
+}
 function calcGoalPaid(row,asOf){
   const freq=row.dataset.goalFreq||'monthly';
   const start=row.dataset.goalStart?new Date(row.dataset.goalStart+'T00:00:00'):null;
@@ -1733,7 +1754,7 @@ function updateGoalMeta(row){
     return;
   }
   const freq=row.dataset.goalFreq||'monthly';
-  const paid=calcGoalPaid(row);
+  const paid=calcGoalAccrual(row);
   if(meta)meta.textContent=fmt(paid)+' / '+fmt(total);
   if(freqIcon)freqIcon.textContent=freq==='weekly'?'↻ 1w':freq==='biweekly'?'↻ 2w':'↻ mo';
 }
