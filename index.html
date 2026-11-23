@@ -161,14 +161,14 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 /* GRAPH */
 .graph-wrap{border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:18px;}
 .graph-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
-.graph-title{font-size:13px;font-weight:600;}
+.graph-title{font-size:15px;font-weight:700;}
 #g2-wrap{user-select:none;}
 .graph-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
 .graph-stats{display:flex;gap:12px;font-size:11px;color:var(--text3);flex-wrap:wrap;justify-content:flex-end;}
 .graph-stats strong{color:var(--text);font-weight:600;}
 .graph-bal{font-size:16px;font-weight:700;}
 .graph-bal.pos{color:#15803D;} .graph-bal.neg{color:#DC2626;}
-.graph-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;}
+.graph-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;padding-top:4px;}
 .print-graph-title{font-size:16px;font-weight:700;margin-bottom:8px;border-bottom:1px solid #ccc;padding-bottom:6px;}
 .print-graph-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:11px;color:#555;}
 .leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);}
@@ -382,25 +382,22 @@ span.flatpickr-weekday{font-size:10px;font-weight:600;color:var(--muted);text-al
 
 <!-- ══ OBLIGATION OUTLOOK ══ -->
 <div class="graph-wrap" id="g2-wrap">
-  <div class="graph-hd">
-    <div>
-      <div class="graph-title" style="display:flex;align-items:center;gap:8px;">Obligation Outlook<button id="g2-today-btn" onclick="panOffset=0;drawGraph2();" style="display:none;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">↩ Today</button></div>
-      <div class="graph-stats" style="margin-top:4px">
-        <span>Current surplus: <strong id="g2-today">—</strong></span>
-        <span>Peak obligation: <strong id="g2-rate">—</strong></span>
-      </div>
-    </div>
-    <div class="graph-meta">
-      <div class="graph-bal" id="g2-status">—</div>
-      <div style="font-size:10px;color:var(--muted)">blue = obligations · orange = your surplus</div>
+  <div class="graph-hd" style="margin-bottom:10px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="graph-title" id="graph-title">Cash Flow Forecast</div>
+      <button id="g2-today-btn" onclick="panOffset=0;drawGraph2();" style="display:none;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;">↩ Today</button>
     </div>
   </div>
   <svg id="urgency-chart" viewBox="0 0 836 480" width="100%" preserveAspectRatio="xMinYMin meet" role="img" aria-label="obligation chart" style="display:block;cursor:grab;"></svg>
   <div class="graph-legend">
-    <div class="leg"><div style="width:18px;height:10px;background:var(--b2);opacity:0.45;border-radius:2px"></div>Amount due on that day</div>
-    <div class="leg"><div style="width:18px;height:10px;background:var(--b2);opacity:0.15;border-radius:2px"></div>Accumulating (not yet due)</div>
-    <div class="leg"><div class="leg-line" style="background:#B45309"></div>Income received</div>
-    <div class="leg"><div style="width:8px;height:8px;border-radius:50%;background:var(--b2);flex-shrink:0"></div>Payment due date</div>
+    <div class="leg"><div class="leg-line" style="background:var(--inc)"></div>Cash balance</div>
+    <div class="leg"><div style="width:9px;height:9px;border-radius:50%;background:var(--inc);flex-shrink:0"></div>Income</div>
+    <div class="leg"><div style="width:12px;height:14px;background:var(--b1);border-radius:2px;opacity:0.9;flex-shrink:0"></div>Savings</div>
+    <div class="leg"><div style="display:flex;gap:1px;flex-shrink:0"><div style="width:7px;height:14px;background:var(--b2);opacity:0.5;border-radius:2px 0 0 2px"></div><div style="width:7px;height:14px;background:var(--b2);opacity:0.15;border-radius:0 2px 2px 0"></div></div>Expenses</div>
+    <div class="leg"><div style="display:flex;gap:1px;flex-shrink:0"><div style="width:7px;height:14px;background:var(--b3);opacity:0.5;border-radius:2px 0 0 2px"></div><div style="width:7px;height:14px;background:var(--b3);opacity:0.15;border-radius:0 2px 2px 0"></div></div>Goals</div>
+    <div class="leg"><div style="width:9px;height:9px;border-radius:50%;background:var(--b2);border:1.5px solid var(--surface);box-sizing:border-box;flex-shrink:0"></div>Payment due</div>
+    <div class="leg" style="color:var(--muted);font-style:italic;font-size:10px;align-self:center">Dark bar = due today · light = building up</div>
+    <div class="leg"><div style="width:16px;height:0;border-top:2px dashed #22C55E;flex-shrink:0"></div>Today</div>
   </div>
 </div>
 
@@ -792,7 +789,7 @@ function drawGraph2(){
   const tod=new Date();tod.setHours(0,0,0,0);
   const realTod=new Date(tod);
   const WIN=31;
-  const WIN_AXIS=93; /* wider window for stable axis — prevents grid jumping on pan */
+  const WIN_AXIS=400; /* must exceed any realistic pan + longest advMon cycle (61 days) + WIN (31); covers ~13 months */
   /* end-of-month snapping: if d is the last day of its month, advance to last day of next month */
   const advMon=d=>{const ld=new Date(d.getFullYear(),d.getMonth()+1,0);return d.getDate()>=ld.getDate()?new Date(d.getFullYear(),d.getMonth()+2,0):new Date(d.getFullYear(),d.getMonth()+1,d.getDate());};
   tod.setDate(tod.getDate()+panOffset);
@@ -868,7 +865,10 @@ function drawGraph2(){
         while(true){
           const _ps0=new Date(cur.getFullYear(),cur.getMonth(),1);
           const _psd=Math.round((_ps0-tod)/86400000);
-          if(dd>WIN_AXIS&&!(isSavings&&_psd<=WIN_AXIS))break;
+          /* For non-savings: run 62 days past WIN_AXIS so the trajectory always has the
+             real next occurrence (worst-case advMon skip = 61 days), never the +30 fallback.
+             For savings: keep the existing period-start guard. */
+          if(isSavings?(dd>WIN_AXIS&&_psd>WIN_AXIS):(dd>WIN_AXIS+62))break;
           if(!endD||cur<=endD)occs.push(dd);
           cur=advMon(cur);
           dd=Math.round((cur-tod)/86400000);
@@ -964,7 +964,7 @@ function drawGraph2(){
     goalTraj.push(gv);
   }
 
-  const peakV=Math.max(...traj.map((v,i)=>v+goalTraj[i]),1);
+  const peakV=Math.max(...traj.slice(0,WIN+1).map((v,i)=>v+goalTraj[i]),1);
 
   /* header (g2-today and g2-status set after window data is computed below) */
   const g2t=document.getElementById('g2-today');
@@ -993,7 +993,7 @@ function drawGraph2(){
   const savingsBar=new Array(WIN_AXIS+2).fill(0);
   nonRec.forEach(exp=>{
     dueDots[exp.dud]=(dueDots[exp.dud]||0)+exp.amount;
-    const pk1=exp.dud+1;if(pk1<=WIN_AXIS)peaked[pk1]+=exp.amount;
+    const pk1=exp.dud+1;peaked[Math.min(pk1,WIN_AXIS+1)]+=exp.amount;
   });
   recExp.forEach(exp=>{
     if(exp.isSavings){
@@ -1024,11 +1024,11 @@ function drawGraph2(){
     } else {
       const dots=exp.isGoal?goalDots:dueDots;
       if(exp.monthly){
-        exp.occs.forEach(dd=>{dots[dd]=(dots[dd]||0)+exp.amount;const pk2=dd+1;if(pk2<=WIN_AXIS)peaked[pk2]+=exp.amount;});
+        exp.occs.forEach(dd=>{dots[dd]=(dots[dd]||0)+exp.amount;peaked[Math.min(dd+1,WIN_AXIS+1)]+=exp.amount;});
       } else {
         let occ=exp.dud;
         while(occ<=WIN_AXIS){
-          if(exp.endDay===undefined||occ<=exp.endDay){dots[occ]=(dots[occ]||0)+exp.amount;const pk2=occ+1;if(pk2<=WIN_AXIS)peaked[pk2]+=exp.amount;}
+          if(exp.endDay===undefined||occ<=exp.endDay){dots[occ]=(dots[occ]||0)+exp.amount;peaked[Math.min(occ+1,WIN_AXIS+1)]+=exp.amount;}
           occ+=exp.period;
         }
       }
@@ -1090,12 +1090,28 @@ function drawGraph2(){
     let _maxBal=_sb;
     for(let D=0;D<=WIN;D++){if(incOnDay[D]>0||peaked[D]>0||savingsBar[D]>0){_b+=incOnDay[D]-peaked[D]-savingsBar[D];if(_b<_minBal)_minBal=_b;if(_b>_maxBal)_maxBal=_b;}}
     _winMinBal=_minBal; /* actual min in VISIBLE window (WIN days), for status display */
-    for(let D=WIN+1;D<=WIN_AXIS;D++){if(incOnDay[D]>0||peaked[D]>0||savingsBar[D]>0){_b+=incOnDay[D]-peaked[D]-savingsBar[D];if(_b<_minBal)_minBal=_b;if(_b>_maxBal)_maxBal=_b;}}
+    /* NOTE: do NOT extend this scan beyond WIN — axis must reflect only what's visible,
+       not 400 days of projected surplus which inflates the max artificially */
     const _rawMaxV=Math.max(_maxBal*1.08,peakV*1.2,500);
     /* axis frozen after data change — never updated while panning */
+    const _buildTraj=_axisFromComputeAll;
     if(_axisFromComputeAll){_axisMaxSeen=_rawMaxV;_axisMinSeen=_minBal;_axisFromComputeAll=false;}
     maxV=_axisMaxSeen;
     _minBal=_axisMinSeen; /* dy2 reads this for coordinate mapping */
+    /* build full trajectories so bars+balance are continuous during panning */
+    if(_buildTraj){
+      _balTraj=new Array(WIN_AXIS+2).fill(0);
+      _trajGlobal=[...traj];
+      _savingsTrajGlobal=[...savingsTraj];
+      _goalTrajGlobal=[...goalTraj];
+      _savingsBarGlobal=[...savingsBar];
+      _dueDotsGlobal={...dueDots};
+      _goalDotsGlobal={...goalDots};
+      _savingsDotsGlobal={...savingsDots};
+      let _tb=pastInc-pastDue;
+      for(let D=0;D<=WIN_AXIS;D++){_balTraj[D]=_tb;_tb+=incOnDay[D]-peaked[D]-savingsBar[D];}
+      _balTraj[WIN_AXIS+1]=_tb;
+    }
   }
 
   /* min cushion = lowest cash balance during the window (matches orange line low point) */
@@ -1124,14 +1140,21 @@ function drawGraph2(){
   /* step-up/down orange cash flow line */
   const incDotData=[];
   {
-    const startBal=pastInc-pastDue;
+    /* use pre-computed trajectory so startBal changes smoothly while panning */
+    const startBal=(_balTraj&&panOffset>0)?(_balTraj[Math.min(panOffset,WIN_AXIS+1)]??_balTraj[WIN_AXIS+1]):pastInc-pastDue;
     let curBal=startBal;
     const zy=dy2(0).toFixed(1);
+
+    const _leadInG='';
+
     let stepPath=`M ${lm.toFixed(1)} ${dy2(startBal).toFixed(1)}`;
     let fillPath=`M ${lm.toFixed(1)} ${zy} L ${lm.toFixed(1)} ${dy2(startBal).toFixed(1)}`;
     for(let D=0;D<=WIN;D++){
       if(incOnDay[D]>0||peaked[D]>0||savingsBar[D]>0){
-        curBal+=incOnDay[D]-peaked[D]-savingsBar[D];
+        /* use pre-computed trajectory for balance so the line is continuous
+           across pan positions; fall back to incremental on the initial view */
+        if(_balTraj&&panOffset+D+1<=WIN_AXIS+1){curBal=_balTraj[panOffset+D+1];}
+        else{curBal+=incOnDay[D]-peaked[D]-savingsBar[D];}
         const ex=bx2(D).toFixed(1);
         const ey=dy2(curBal).toFixed(1);
         stepPath+=` H ${ex} V ${ey}`;
@@ -1144,6 +1167,7 @@ function drawGraph2(){
     g+=`<line x1="${lm}" y1="${zy}" x2="${W-rm}" y2="${zy}" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>`;
     g+=`<text x="${lm-5}" y="${(+zy+5).toFixed(1)}" text-anchor="end" fill="#94A3B8" font-size="14" font-family="Inter,sans-serif">$0</text>`;
     /* area fill removed */
+    g+=_leadInG;
     g+=`<path d="${stepPath}" fill="none" stroke="var(--inc)" stroke-width="2" opacity="0.8"/>`;
     const labelY=dy2(curBal);
     const isDeficit=curBal<0;
@@ -1163,22 +1187,24 @@ function drawGraph2(){
     _used.push(r);return true;
   };
   for(let D=0;D<=WIN;D++){
-    const ev=traj[D];
-    const gv=goalTraj[D];
-    const sv=savingsBar[D];
+    const _gi=panOffset+D;
+    const ev=(_trajGlobal&&panOffset>0)?(_gi<=WIN_AXIS?(_trajGlobal[_gi]??traj[D]):traj[D]):traj[D];
+    const gv=(_goalTrajGlobal&&panOffset>0)?(_gi<=WIN_AXIS?(_goalTrajGlobal[_gi]??goalTraj[D]):goalTraj[D]):goalTraj[D];
+    const sv=(_savingsBarGlobal&&panOffset>0)?(_gi<=WIN_AXIS?(_savingsBarGlobal[_gi]??savingsBar[D]):savingsBar[D]):savingsBar[D];
+    const pk=(_dueDotsGlobal&&panOffset>0)?(_gi<=WIN_AXIS?(_dueDotsGlobal[_gi]||0):(dueDots[D]||0)):(dueDots[D]||0);
+    const pk3=(_goalDotsGlobal&&panOffset>0)?(_gi<=WIN_AXIS?(_goalDotsGlobal[_gi]||0):(goalDots[D]||0)):(goalDots[D]||0);
+    const _savDot=(_savingsDotsGlobal&&panOffset>0)?(_gi<=WIN_AXIS?(_savingsDotsGlobal[_gi]||0):(savingsDots[D]||0)):(savingsDots[D]||0);
     const x=bx2(D).toFixed(1);
-    const pk=dueDots[D]||0;    // expense payment due today
-    const pk3=goalDots[D]||0;  // goal payment due today
     const ev_ghost=Math.max(0,ev-pk);   // expense accrual above payment
     const gv_ghost=Math.max(0,gv-pk3);  // goal accrual above payment
     const bW=barW.toFixed(1);
 
     /* 1. Full savings — from 0 */
-    if(sv>0||savingsDots[D]){
+    if(sv>0||_savDot){
       const bot=dy2(0);
       const top=Math.min(dy2(sv),bot-1);
-      g+=`<rect x="${x}" y="${top.toFixed(1)}" width="${bW}" height="${(bot-top).toFixed(1)}" rx="1" fill="var(--b1)" opacity="${savingsDots[D]?'0.95':'0.8'}"/>`;
-      if(sv>0&&!savingsDots[D]){
+      g+=`<rect x="${x}" y="${top.toFixed(1)}" width="${bW}" height="${(bot-top).toFixed(1)}" rx="1" fill="var(--b1)" opacity="${_savDot?'0.95':'0.8'}"/>`;
+      if(sv>0&&!_savDot){
         const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
         const _lbl=`$${Math.round(sv)}`,_cx=+x+barW/2,_y=top-3;
         if(_fits(_cx,_y,_lbl,10,ank)){g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b1)" font-size="10" font-family="Inter,sans-serif" opacity="0.9">${_lbl}</text>`;}
@@ -1226,38 +1252,38 @@ function drawGraph2(){
     }
 
     /* expense dot — at top of full expense bar */
-    if(dueDots[D]){
+    if(pk){
       const dotY=dy2(sv+pk).toFixed(1);
       g+=`<circle cx="${(+x+barW/2).toFixed(1)}" cy="${(+dotY-6).toFixed(1)}" r="3.5" fill="var(--b2)" stroke="white" stroke-width="1.5"/>`;
       if(+dotY>tm+16){
         const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
-        const _lbl=fmt(dueDots[D]),_cx=+x+barW/2;
+        const _lbl=fmt(pk),_cx=+x+barW/2;
         let _y=+dotY-13;for(let _i=0;_i<6&&!_fits(_cx,_y,_lbl,11,ank);_i++)_y-=14;
         g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b2)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;
       }
     }
 
     /* goal dot — at top of full goal bar */
-    if(goalDots[D]){
+    if(pk3){
       const dotY=dy2(sv+pk+pk3).toFixed(1);
-      const gx=(+x+barW/2+(dueDots[D]?5:0)).toFixed(1);
+      const gx=(+x+barW/2+(pk?5:0)).toFixed(1);
       g+=`<circle cx="${gx}" cy="${(+dotY-6).toFixed(1)}" r="3.5" fill="var(--b3)" stroke="white" stroke-width="1.5"/>`;
       if(+dotY>tm+16){
         const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
-        const _lbl=fmt(goalDots[D]),_cx=+x+barW/2;
+        const _lbl=fmt(pk3),_cx=+x+barW/2;
         let _y=+dotY-13;for(let _i=0;_i<6&&!_fits(_cx,_y,_lbl,11,ank);_i++)_y-=14;
         g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b3)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;
       }
     }
 
     /* savings dot — at top of savings bar */
-    if(savingsDots[D]){
+    if(_savDot){
       const bot=dy2(0);
       const svTop=(Math.min(dy2(sv||0),bot-5)).toFixed(1);
       g+=`<circle cx="${(+x+barW/2).toFixed(1)}" cy="${(+svTop-6).toFixed(1)}" r="3.5" fill="var(--b1)" stroke="white" stroke-width="1.5"/>`;
       if(+svTop>tm+16){
         const ank=D>=WIN*0.85?'end':D<=2?'start':'middle';
-        const _lbl=fmt(savingsDots[D]),_cx=+x+barW/2;
+        const _lbl=fmt(_savDot),_cx=+x+barW/2;
         let _y=+svTop-13;for(let _i=0;_i<6&&!_fits(_cx,_y,_lbl,11,ank);_i++)_y-=14;
         g+=`<text x="${_cx.toFixed(1)}" y="${_y.toFixed(1)}" text-anchor="${ank}" fill="var(--b1)" font-size="11" font-weight="600" font-family="Inter,sans-serif">${_lbl}</text>`;
       }
@@ -1294,8 +1320,7 @@ function drawGraph2(){
   /* ── hover interactivity ── */
   {
     const NS='http://www.w3.org/2000/svg';
-    const _sb=pastInc-pastDue;
-    const _cash=[];{let _b=_sb;for(let D=0;D<=WIN;D++){_b+=incOnDay[D]-peaked[D]-savingsBar[D];_cash.push(_b);}}
+    const _cash=[];{for(let D=0;D<=WIN;D++){_cash.push(_balTraj&&panOffset+D+1<=WIN_AXIS+1?_balTraj[panOffset+D+1]:_balTraj?.[panOffset]+incOnDay[D]-peaked[D]-savingsBar[D]||0);}}
     let _hg=svg.querySelector('.g2-hl');if(_hg)_hg.remove();
     let _capOld=svg.querySelector('.g2-cap');if(_capOld)_capOld.remove();
     /* visuals group — pointer-events:none so it never intercepts the capture rect */
@@ -1327,7 +1352,11 @@ function drawGraph2(){
       const _dd=new Date(tod);_dd.setDate(tod.getDate()+D);
       _hg.appendChild(_tx(ttx+TW/2,tty+17,(D===0&&panOffset===0)?'Today':MN[_dd.getMonth()]+' '+_dd.getDate(),{sz:11,c:'#E2E8F0',a:'middle',w:600}));
       _hg.appendChild(_el('line',{x1:(ttx+10).toFixed(1),y1:(tty+24).toFixed(1),x2:(ttx+TW-10).toFixed(1),y2:(tty+24).toFixed(1),stroke:'rgba(100,116,139,0.3)','stroke-width':1}));
-      [['Cash',_cash[D],'#F97316'],['Expenses',traj[D],'#94A3B8'],['Savings',savingsTraj[D],'#94A3B8'],['Goals',goalTraj[D],'#94A3B8']].forEach(([lb,v,c],i)=>{
+      const _gi2=panOffset+D;
+      const _tt_ev=(_trajGlobal&&panOffset>0)?(_gi2<=WIN_AXIS?(_trajGlobal[_gi2]??traj[D]):traj[D]):traj[D];
+      const _tt_sv=(_savingsTrajGlobal&&panOffset>0)?(_gi2<=WIN_AXIS?(_savingsTrajGlobal[_gi2]??savingsTraj[D]):savingsTraj[D]):savingsTraj[D];
+      const _tt_gv=(_goalTrajGlobal&&panOffset>0)?(_gi2<=WIN_AXIS?(_goalTrajGlobal[_gi2]??goalTraj[D]):goalTraj[D]):goalTraj[D];
+      [['Cash',_cash[D],'#F97316'],['Expenses',_tt_ev,'#94A3B8'],['Savings',_tt_sv,'#94A3B8'],['Goals',_tt_gv,'#94A3B8']].forEach(([lb,v,c],i)=>{
         const ry=tty+40+i*17;
         _hg.appendChild(_tx(ttx+10,ry,lb,{c}));
         _hg.appendChild(_tx(ttx+TW-10,ry,fmt(v),{c,a:'end'}));
@@ -2216,6 +2245,9 @@ function loadLS(){
 let panOffset=0;
 let _axisMaxSeen=0,_axisMinSeen=0; /* stable Y-axis: accumulate worst-case bounds across pan positions */
 let _axisFromComputeAll=false; /* flag: axis may only update when data changed, never while panning */
+let _balTraj=null; /* balance trajectory from today: smooth startBal during panning */
+let _trajGlobal=null,_savingsTrajGlobal=null,_goalTrajGlobal=null,_savingsBarGlobal=null;
+let _dueDotsGlobal=null,_goalDotsGlobal=null,_savingsDotsGlobal=null;
 loadLS();
 computeAll();
 (function(){
